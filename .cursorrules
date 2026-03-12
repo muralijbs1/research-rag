@@ -1,0 +1,12 @@
+This is a Research Paper RAG Assistant built by a Data Scientist learning production ML
+engineering.
+Stack: Python 3.11, LangChain, LangGraph, ChromaDB, OpenAI embeddings, Claude and GPT-4o
+LLMs, Cohere reranker, RAGAS evaluation, Streamlit UI.
+Machine: Apple M3 MacBook Air. Use device="mps" for any local PyTorch model. No Docker.
+Code style: type hints on every function, a docstring explaining what and why, clear variable names.
+The developer writes all code themselves. When helping, explain the concept — do not generate
+whole files.
+Always explain what a suggestion does before showing the code.
+All LLM calls must go through src/generation/llm_router.py only.
+ChromaDB must always use PersistentClient with a path — never in-memory.
+Streamlit values that must survive a page rerun must use st.session_state.

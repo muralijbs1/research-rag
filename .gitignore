@@ -1,0 +1,83 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+.env/
+
+# Environment and secrets (API keys, etc.)
+.env
+.env.local
+.env.*.local
+*.pem
+
+# ChromaDB persistent store (never commit DB files)
+chroma_db/
+data/chroma/
+
+# Uploaded documents (user PDFs)
+uploaded_pdfs/
+*.pdf
+*.docx
+*.chroma/
+
+# MLflow experiment runs
+experiments/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Logs and temp
+*.log
+logs/
+tmp/
+temp/
+.cache/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Optional: local data or model caches (uncomment if you use them)
+# data/
+# models/
+# .ragas_cache/
