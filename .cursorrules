@@ -1,5 +1,4 @@
-This is a Research Paper RAG Assistant built by a Data Scientist learning production ML
-engineering.
+This is a Research Paper RAG Assistant built by a Data Scientist learning production ML engineering.
 Stack: Python 3.11, LangChain, LangGraph, ChromaDB, OpenAI embeddings, Claude and GPT-4o
 LLMs, Cohere reranker, RAGAS evaluation, Streamlit UI.
 Machine: Apple M3 MacBook Air. Use device="mps" for any local PyTorch model. No Docker.

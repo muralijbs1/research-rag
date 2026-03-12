@@ -14,6 +14,8 @@ RERANK_TOP_N = int(os.getenv("RERANK_TOP_N", 5))
 # Models
 DEFAULT_LLM = os.getenv("DEFAULT_LLM", "gpt4o")
 RERANKER = os.getenv("RERANKER", "cohere")
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
+
 
 # Paths
 CHROMA_PERSIST_DIR = os.getenv("CHROMA_PERSIST_DIR", "./chroma_db")
