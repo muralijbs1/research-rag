@@ -56,4 +56,4 @@ pytest-asyncio>=0.24.0
 rich>=13.0.0
 
 # --- Optional: Redis cache for production ---
-# redis>=5.0.0
+redis>=5.0.0
