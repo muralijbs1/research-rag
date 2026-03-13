@@ -81,3 +81,4 @@ temp/
 # data/
 # models/
 # .ragas_cache/
+.ipynb_checkpoints/
