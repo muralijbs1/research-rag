@@ -14,7 +14,7 @@ class VectorStore:
         
         ids = [f"{paper_name}_chunk_{i}" for i in range(len(chunks))]
         metadatas = [
-            {"paper_name": paper_name, "paper_hash": paper_hash}
+            {"paper_name": paper_name, "paper_hash": paper_hash or " "}
             for _ in chunks
         ]
 
