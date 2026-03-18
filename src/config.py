@@ -14,14 +14,14 @@ RERANK_TOP_N = int(os.getenv("RERANK_TOP_N", 5))
 # Models
 DEFAULT_LLM = os.getenv("DEFAULT_LLM", "gpt-4o-mini")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-haiku-3-5-20251001")
+ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
 RERANKER = os.getenv("RERANKER", "cohere")
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
 
 # Models for Litellm
 DEFAULT_LITELLM = os.getenv("DEFAULT_LITELLM", "openai/gpt-4o-mini")
 OPENAI_LITELLM_MODEL = os.getenv("OPENAI_LITELLM_MODEL", "openai/gpt-4o-mini")
-ANTHROPIC_LITELLM_MODEL = os.getenv("ANTHROPIC_LITELLM_MODEL", "anthropic/claude-3-5-haiku-latest")
+ANTHROPIC_LITELLM_MODEL = os.getenv("ANTHROPIC_LITELLM_MODEL", "anthropic/claude-haiku-4-5-20251001")
 
 
 # Paths
