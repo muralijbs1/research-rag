@@ -12,6 +12,7 @@ def generate_answer(
     *,
     top_n: int = 5,
     model: Optional[str] = None,
+    system_prompt: Optional[str] = None,
 ) -> dict[str, Any]:
     """
     End-to-end "generation" step for the RAG pipeline.
@@ -48,7 +49,7 @@ def generate_answer(
     used_chunks = (reranked_chunks or [])[:top_n]
     prompt = build_prompt(question=question, chunks=used_chunks, top_n=len(used_chunks) if used_chunks else top_n)
 
-    result = generate_with_metadata(prompt, model=model)
+    result = generate_with_metadata(prompt, model=model, system=system_prompt)
     return {
         "answer": result["text"],
         "source_chunks": used_chunks,

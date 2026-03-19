@@ -1,0 +1,144 @@
+question,answer,ground_truth,faithfulness,answer_relevancy,context_recall,context_precision
+What BLEU score did the Transformer achieve on WMT 2014 English-to-German?,The Transformer achieved a BLEU score of **28.4** on WMT 2014 English-to-German.,The Transformer achieved 28.4 BLEU on the WMT 2014 English-to-German translation task.,1.0,0.9999999999999996,1.0,0.8333333332916666
+How does the Transformer differ from RNN-based models in handling sequences?,"The Transformer differs from RNN-based models by using **self-attention instead of recurrent layers** to process sequences.
+
+From the context:
+- It is a **sequence transduction model based entirely on attention**.
+- It **does not use sequence-aligned RNNs or convolutions**.
+- In the encoder-decoder setup, the encoder maps an input sequence to continuous representations, and the decoder generates outputs **auto-regressively**, but the model’s core computation is done with **stacked self-attention and pointwise layers** rather than step-by-step recurrence.
+
+In contrast, RNN-based models handle sequences by processing them sequentially with recurrent layers. The Transformer removes those recurrent layers and relies on attention to compute representations of the whole sequence.","The Transformer removes recurrence entirely and relies on self-attention mechanisms to process all tokens in parallel, unlike RNNs which process sequentially.",0.875,0.9618357915080807,1.0,0.8041666666465626
+Why is self-attention more efficient than RNNs for long sequences?,"Self-attention is more efficient than RNNs for long sequences because it can connect all positions using a constant number of sequentially executed operations, while an RNN must process positions one by one, requiring \(O(n)\) sequential operations.
+
+The context also says self-attention can be faster than recurrent layers when the sequence length \(n\) is smaller than the representation dimensionality \(d\), which is often the case in practice. For very long sequences, the context notes self-attention may be restricted to a neighborhood to improve computational performance.
+
+If you want, I can also explain the “constant number of operations” vs. “\(O(n)\) sequential operations” point in simpler terms.","Self-attention allows parallel computation and direct connections between all tokens, avoiding the sequential dependency and long-range gradient issues in RNNs.",0.6666666666666666,0.9999999999999997,1.0,0.99999999998
+What does ReAct stand for and what two things does it combine?,"ReAct stands for **reasoning and acting**.
+
+It combines:
+1. **Reasoning** — generating thoughts or reasoning traces in language
+2. **Acting** — taking actions in the environment or interface to gather information or make progress",ReAct stands for Reasoning and Acting. It combines reasoning traces and task-specific actions in an interleaved manner.,0.75,0.98637279359065,1.0,0.9166666666361111
+What benchmark tasks were used to evaluate ReAct?,"ReAct was evaluated on four benchmark tasks:
+
+- **HotPotQA** — question answering  
+- **Fever** — fact verification  
+- **ALFWorld** — text-based game / interactive decision making  
+- **WebShop** — webpage navigation / interactive decision making  
+
+If you want, I can also summarize what ReAct achieved on each benchmark.","ReAct was evaluated on knowledge-intensive reasoning tasks including HotpotQA and FEVER, and interactive decision-making tasks including ALFWorld and WebShop.",1.0,0.9893903942962109,1.0,0.99999999995
+What is AutoGen and what problem does it solve?,"Based on the provided context, **AutoGen** is a framework for building LLM-based applications with **multiple agents** that can cooperate to solve tasks. It supports:
+
+- **Autonomous problem solving** using built-in agents
+- **Human-in-the-loop interaction** by letting humans participate or provide feedback
+- **Customizing/extending agents** for specific workflows
+- Adding specialized agents, like a **grounding agent** to supply commonsense knowledge
+
+From the context, the main problem it addresses is that building such multi-agent AI systems can be complex and lengthy. AutoGen aims to make it easier to develop these systems, and it is shown specifically for **math problem solving**, where it can improve performance and support scenarios that involve humans or multiple agents.
+
+I don’t know more specific formal definitions beyond what’s included in the provided excerpts.","AutoGen is a framework that enables building LLM applications via multi-agent conversations, allowing agents to collaborate to solve tasks that are difficult for a single LLM.",0.7272727272727273,0.0,1.0,0.249999999975
+What types of agents does AutoGen support?,"From the provided context, AutoGen supports agents that can be based on:
+
+- LLMs
+- human inputs
+- tools
+- combinations of these
+
+It also mentions built-in agents and extensible/customizable agents with specialized roles. I don’t have enough context to list a more complete official taxonomy beyond that.","AutoGen supports customizable and conversable agents that can operate using LLMs, human inputs, tools, or a combination of these.",0.8571428571428571,0.0,1.0,0.8874999999778125
+How does Mixture-of-Agents improve response quality compared to a single LLM?,"Mixture-of-Agents improves response quality by using **multiple LLMs in successive stages** instead of relying on a single model.
+
+From the provided context, the process is:
+
+1. **Several agents independently generate responses** to the same prompt in the first layer.
+2. A later **aggregator/model uses those multiple responses** as input.
+3. The system **iteratively refines and enhances** the output across layers.
+
+The key idea is that LLMs can be **collaborative**: even when the auxiliary responses are lower quality than what one model could produce alone, they can still help improve the final answer.
+
+The context also says this approach:
+- **significantly improves output quality** over individual models,
+- outperforms LLM rankers,
+- and achieved **LC win rates up to 65%** on benchmarks like AlpacaEval 2.0, MT-Bench, and FLASK.
+
+I don’t know more specific mechanics than that from the provided context, such as the exact aggregation algorithm or prompt format.","It combines outputs from multiple agents and refines them through aggregation, leveraging diversity of responses to improve accuracy.",1.0,0.0,1.0,0.99999999998
+What is the role of the aggregator in Mixture-of-Agents?,"In Mixture-of-Agents, the **aggregator** is the model that **synthesizes the responses produced by the proposer models into one final, higher-quality output**.
+
+From the context, its role is not just to pick the best answer, but to **combine and refine multiple candidate responses**. The text also suggests an effective aggregator should be able to **maintain or improve quality even when the inputs are weaker than the aggregator itself**.
+
+If you want, I can also explain how the aggregator differs from a simple LLM ranker in this setup.",The aggregator synthesizes multiple candidate responses into a single improved final answer.,1.0,0.9999999999999997,1.0,0.8874999999778125
+What type of memory does the RAG model combine?,"RAG combines **parametric memory** and **non-parametric memory**.
+
+In the context provided, the parametric memory is a **pre-trained seq2seq model/transformer**, and the non-parametric memory is a **dense vector index of Wikipedia** accessed with a **pre-trained neural retriever**.",The RAG model combines parametric and non-parametric memory.,1.0,0.9288518841970062,1.0,0.999999999975
+What is a key advantage of RAG's non-parametric memory?,"A key advantage of RAG’s non-parametric memory is that it can be updated easily at test time by replacing the memory/index, without retraining the model.",It allows knowledge to be updated by changing the document index without retraining the model.,0.6666666666666666,0.9999999999999996,1.0,0.99999999998
+What does self-consistency improve in language models?,"Self-consistency improves **the accuracy of reasoning** in language models, especially on **arithmetic and commonsense reasoning tasks**.
+
+From the provided context, it:
+- improves performance over **chain-of-thought prompting**
+- helps across **multiple model scales**
+- can also improve **robustness to imperfect prompts**
+- is useful for **collecting rationales** and **providing uncertainty estimates / better calibration**
+
+If you want, I can also summarize the specific tasks and gains mentioned in the context.",Self-consistency improves reasoning accuracy by sampling multiple reasoning paths and selecting consistent answers.,1.0,0.9726666090159702,1.0,0.99999999998
+Does self-consistency require model fine-tuning?,"No. According to the context, self-consistency is “entirely unsupervised,” works off-the-shelf with pre-trained language models, and requires no additional training, auxiliary models, fine-tuning, or human annotation.","No, it is applied in a few-shot setting without training or fine-tuning the model.",1.0,0.8782970658296315,1.0,0.99999999998
+What is the goal of The AI Scientist system?,"The goal of **The AI Scientist** is to **fully automate the scientific discovery process**. In the provided context, it is described as an end-to-end system that uses LLMs to autonomously generate research ideas, run experiments, search for related work, write papers, and even perform automated peer review. It is also intended to support **open-ended scientific discovery** in a way that is safe and consistent with human values.","The goal of The AI Scientist is to automate the entire scientific discovery process, including generating research ideas, running experiments, and writing scientific papers.",1.0,0.9785164846253949,1.0,0.99999999998
+What are the three main phases of The AI Scientist system?,"The AI Scientist has three main phases:
+
+1. **Idea Generation**
+2. **Experimental Iteration**
+3. **Paper Write-up**","The three phases are idea generation, experimental iteration, and paper write-up.",1.0,0.9628558486470075,1.0,0.8333333332916666
+How many parameters does TinyLlama have and how many tokens was it trained on?,"TinyLlama is a **1.1B-parameter** model, and it was trained on **about 3 trillion tokens** in the original version described in the context.
+
+There is also a note that **TinyLlama v1.1** was trained on **2 trillion tokens**, but the original TinyLlama training cited here used **3 trillion**.",TinyLlama has 1.1 billion parameters and was pretrained on approximately 1 trillion tokens for up to 3 epochs.,0.75,0.9425607330366826,0.0,0.0
+What two datasets were used to pretrain TinyLlama?,TinyLlama was pre-trained using two datasets: **SlimPajama** and the **StarCoder training data**.,"TinyLlama was pretrained using SlimPajama and the StarCoder training dataset, combined at a sampling ratio of approximately 7:3.",1.0,0.976634793021612,1.0,0.9166666666361111
+What five tools does Toolformer use?,"Toolformer incorporates five tools:
+
+1. Calculator  
+2. Q&A system  
+3. Search engine  
+4. Translation system  
+5. Calendar","Toolformer uses five tools: a question answering system, a Wikipedia search engine, a calculator, a calendar, and a machine translation system.",1.0,0.9587690799048868,1.0,0.49999999995
+How does Toolformer learn to use tools?,"Toolformer learns to use tools in a self-supervised way.
+
+From the provided context, the process is:
+
+- It is fine-tuned on a large number of sampled API calls.
+- These sampled calls are filtered using a perplexity-based criterion: only the calls that reduce perplexity on future tokens are kept.
+- During training, the model learns:
+  - which APIs to call,
+  - when to call them,
+  - what arguments to pass,
+  - and how to incorporate the tool outputs into future token prediction.
+- It requires only a handful of demonstrations per API, not large amounts of human annotation.
+
+So, in short: Toolformer teaches itself tool use by generating candidate API calls, keeping the useful ones, and training on those examples.","Toolformer learns to use tools in a self-supervised way by generating potential API calls, executing them, and filtering out calls that do not reduce the loss on future tokens.",1.0,0.9999999999999997,1.0,0.99999999998
+What distinguishes Agentic RAG from standard RAG systems?,"Agentic RAG is distinguished from standard RAG by adding autonomous agents that can make dynamic decisions, orchestrate retrieval, filter relevant information, and iteratively refine responses.
+
+From the provided context, standard RAG is described as more static and reactive, while Agentic RAG is:
+
+- more adaptive and dynamic
+- able to use iterative refinement
+- able to optimize workflows
+- better suited to complex, real-time, and multi-domain queries
+- designed to improve precision and scalability through agent-driven retrieval and reasoning
+
+I don’t know more than that from the context alone, such as a formal definition of standard RAG beyond being static/reactive.","Agentic RAG incorporates autonomous agents that can plan, reason, and dynamically decide when and how to retrieve information, going beyond the fixed retrieve-then-generate pipeline of standard RAG.",1.0,0.0,1.0,0.99999999998
+What are the three main components of an Agentic RAG system?,"The context only clearly lists the **three primary components of a RAG system** as:
+
+1. **Retrieval**
+2. **Augmentation**
+3. **Generation**
+
+It does **not explicitly name the three main components of an Agentic RAG system** in the provided chunks. If you want, I can also summarize the agent-related components mentioned in the context, but I’d need more text to answer that precisely.","The three main components are the retrieval component, the reasoning and planning component, and the generation component.",0.5,0.0,0.0,0.0
+How many parameters does GPT-3 have?,GPT-3 has **175 billion parameters**.,GPT-3 has 175 billion parameters.,1.0,0.9999999999999997,1.0,0.6388888888675925
+What is few-shot learning as described in the GPT-3 paper?,"In the GPT-3 paper, **few-shot learning** means **in-context learning** where the model is given:
+
+- a **natural language task description**, and
+- **a small number of example input-output demonstrations** in the prompt,
+
+with **no parameter updates or fine-tuning**.
+
+The paper contrasts this with:
+
+- **one-shot learning**: only one demonstration
+- **zero-shot learning**: no demonstrations, only an instruction
+
+The idea is that the model uses the examples provided in its context window to infer how to perform the task.","Few-shot learning allows the model to perform tasks from just a few examples provided in the prompt, without any gradient updates or fine-tuning.",1.0,0.9842154720959987,1.0,0.4166666666458333

@@ -17,7 +17,7 @@ from src.retrieval.retriever import retrieve
 METRICS = [faithfulness, answer_relevancy, context_recall, context_precision]
 
 
-def run_pipeline_on_dataset(dataset: Dataset, model: str | None = None) -> Dataset:
+def run_pipeline_on_dataset(dataset: Dataset, model: str | None = None, system_prompt: str | None = None) -> Dataset:
     """Run the full RAG pipeline on every question and populate answers + contexts."""
     questions, answers, contexts, ground_truths = [], [], [], []
 
@@ -25,7 +25,7 @@ def run_pipeline_on_dataset(dataset: Dataset, model: str | None = None) -> Datas
         q = row["question"]
         chunks = retrieve(q, top_k=20)
         reranked = rerank(q, chunks, top_n=5)
-        result = generate_answer(q, reranked, model=model)
+        result = generate_answer(q, reranked, model=model, system_prompt=system_prompt)
 
         questions.append(q)
         answers.append(result["answer"])
@@ -66,6 +66,7 @@ def save_results_csv(scores: Any, dataset: Dataset, output_path: str) -> None:
 def evaluate_rag(
     json_path: str = "eval_data/test_questions.json",
     model: str | None = None,
+    system_prompt: str | None = None,
     output_dir: str = "eval_results",
 ) -> dict[str, Any]:
     """
@@ -89,7 +90,7 @@ def evaluate_rag(
       - "csv_path": path to the saved CSV
     """
     dataset = load_eval_dataset(json_path)
-    filled = run_pipeline_on_dataset(dataset, model=model)
+    filled = run_pipeline_on_dataset(dataset, model=model, system_prompt=system_prompt)
     scores = evaluate(filled, metrics=METRICS, raise_exceptions=False)
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
