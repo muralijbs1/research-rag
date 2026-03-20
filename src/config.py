@@ -15,7 +15,8 @@ RERANK_TOP_N = int(os.getenv("RERANK_TOP_N", 5))
 DEFAULT_LLM = os.getenv("DEFAULT_LLM", "gpt-4o-mini")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
-RERANKER = os.getenv("RERANKER", "cohere")
+#RERANKER = os.getenv("RERANKER", "cohere")  # switch back to cohere when needed
+RERANKER = os.getenv("RERANKER", "sbert")
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
 
 # Models for Litellm
