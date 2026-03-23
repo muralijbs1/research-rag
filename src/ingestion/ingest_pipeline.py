@@ -8,6 +8,10 @@ from src.ingestion.embedder import embed_texts
 from src.retrieval.vector_store import VectorStore
 
 
+class SystemPaperError(Exception):
+    """Raised when a user tries to ingest a PDF that matches a system paper."""
+
+
 def _resolve_pdf_path(pdf_path: str | Path) -> Path:
     """
     Resolve a PDF path in a notebook/Streamlit-friendly way.
@@ -44,62 +48,59 @@ def _resolve_pdf_path(pdf_path: str | Path) -> Path:
 def run_ingestion(
     pdf_path: str | Path,
     paper_name: str | None = None,
+    source: str = "user",
 ) -> dict[str, int]:
     """
-    End‑to‑end ingestion orchestrator for a single PDF.
-
-    This is the only function the Streamlit upload page needs to call.
-    It takes a PDF on disk plus a ``paper_name`` label and then:
-
-    1. Parses + chunks the PDF into text segments.
-    2. Creates embeddings for each chunk.
-    3. Stores chunks + embeddings in the Chroma vector store
-       under IDs that start with ``paper_name``.
+    End-to-end ingestion orchestrator for a single PDF.
 
     Parameters
     ----------
     pdf_path:
         Path to the uploaded PDF on disk.
     paper_name:
-        Optional identifier for this paper (used as an ID prefix in Chroma).
-        If omitted, the file name (without ``.pdf``) is used automatically.
+        Optional identifier for this paper. Defaults to the file stem.
+    source:
+        "user" for user-uploaded papers, "system" for pre-ingested library
+        papers. Defaults to "user".
 
     Returns
     -------
-    dict[str, int]
-        Simple statistics that the UI can display, e.g. number of chunks.
+    dict with "num_chunks".
+
+    Raises
+    ------
+    SystemPaperError
+        If the PDF content hash matches a system paper already in the store.
+        User-uploaded duplicates are silently overwritten as before.
     """
     store = VectorStore()
 
     path: Path = _resolve_pdf_path(pdf_path)
-
-    # If the caller does not provide a name, derive one from the file name.
     resolved_paper_name: str = paper_name or path.stem
 
-    # Compute a stable hash of the raw PDF bytes so we can detect
-    # exact-duplicate uploads even if the file name changes.
     pdf_bytes: bytes = path.read_bytes()
     pdf_hash: str = hashlib.sha256(pdf_bytes).hexdigest()
 
-    # 5) Check whether this content was already ingested.
-    if store.paper_exists_by_hash(pdf_hash):
-        # Always delete previous chunks for this exact PDF content so that
-        # a new ingest acts as a fresh overwrite.
+    existing_source = store.get_paper_source_by_hash(pdf_hash)
+
+    if existing_source == "system":
+        raise SystemPaperError(
+            "This paper is already in our library. Ask your questions directly."
+        )
+
+    if existing_source == "user":
+        # Overwrite previous user upload with the same content.
         store.delete_by_hash(pdf_hash)
 
-    # 1) Parse + chunk PDF
     chunks = load_and_chunk_pdf(path)
-
-    # 2) Create embeddings
     embeddings = embed_texts(chunks)
 
-    # 3 & 6) Store in vector store
     store.add(
         chunks=chunks,
         vectors=embeddings,
         paper_name=resolved_paper_name,
         paper_hash=pdf_hash,
+        source=source,
     )
 
     return {"num_chunks": len(chunks)}
-

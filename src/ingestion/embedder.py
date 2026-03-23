@@ -1,3 +1,5 @@
+import os
+
 from openai import OpenAI
 from src.config import EMBEDDING_MODEL
 
@@ -11,7 +13,7 @@ def embed_texts(
         return []
 
     model_used: str = model or EMBEDDING_MODEL
-    client = OpenAI()  
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     embeddings: list[list[float]] = []
 
