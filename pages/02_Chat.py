@@ -4,9 +4,7 @@ load_dotenv(Path(__file__).parent.parent / ".env", override=True)
 
 import streamlit as st
 
-from src.generation.generator import generate_answer
-from src.retrieval.reranker import rerank
-from src.retrieval.retriever import retrieve
+from src.graph.rag_graph import rag_pipeline
 
 st.set_page_config(page_title="Ask a Question", page_icon="💬")
 st.title("Ask a Question")
@@ -44,24 +42,39 @@ if question:
     with st.chat_message("assistant"):
         with st.spinner("Retrieving and generating..."):
             try:
-                chunks = retrieve(question, top_k=20)
-                reranked = rerank(question, chunks, top_n=5)
-                result = generate_answer(question, reranked, model=model_choice)
-
-                st.markdown(result["answer"])
-
-                with st.expander("Source chunks"):
-                    for i, chunk in enumerate(result["source_chunks"], 1):
-                        st.markdown(f"**Chunk {i}** (score: `{chunk.get('score', 'n/a'):.4f}`)")
-                        st.caption(chunk["text"])
-
-                st.caption(f"Model: `{result['model']}` | Tokens: `{result['token_count']}`")
-
-                st.session_state.messages.append({
-                    "role": "assistant",
-                    "content": result["answer"],
-                    "source_chunks": result["source_chunks"],
+                state = rag_pipeline.invoke({
+                    "question": question,
+                    "original_question": question,
+                    "chunks": [],
+                    "reranked": [],
+                    "answer": {},
+                    "retries": 0,
+                    "quality_passed": False,
                 })
+
+                if state.get("error"):
+                    st.markdown(state["error"])
+                    st.session_state.messages.append({
+                        "role": "assistant",
+                        "content": state["error"],
+                        "source_chunks": [],
+                    })
+                else:
+                    result = state["answer"]
+                    st.markdown(result["answer"])
+
+                    with st.expander("Source chunks"):
+                        for i, chunk in enumerate(result["source_chunks"], 1):
+                            st.markdown(f"**Chunk {i}** (score: `{chunk.get('score', 'n/a'):.4f}`)")
+                            st.caption(chunk["text"])
+
+                    st.caption(f"Model: `{result['model']}` | Tokens: `{result['token_count']}`")
+
+                    st.session_state.messages.append({
+                        "role": "assistant",
+                        "content": result["answer"],
+                        "source_chunks": result["source_chunks"],
+                    })
 
             except Exception as e:
                 st.error(f"Error: {e}")
