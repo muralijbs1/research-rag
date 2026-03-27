@@ -16,7 +16,8 @@ class RAGState(TypedDict, total=False):
     original_question: str
     chunks: list[dict[str, Any]]
     reranked: list[dict[str, Any]]
-    answer: dict[str, Any]
+    source_chunks: list[dict[str, Any]]
+    answer: str
     retries: int
     quality_passed: bool
     error: Optional[str]
@@ -28,7 +29,7 @@ def intent_check_node(state: RAGState) -> RAGState:
         "Reply with only 'yes' or 'no'.\n\n"
         f"Question: {state['question']}"
     )
-    response = (generate(prompt, model="openai") or "").strip()
+    response = (generate(prompt, model="openai", temperature=0,system="You are a helpful assistant that only replies with 'yes' or 'no'.") or "").strip()
     if "yes" in response.lower():
         return state
     return {**state, "error": "I can only answer questions about AI/ML research papers. Please ask me something related to the papers in our library!"}
@@ -69,6 +70,8 @@ def rewrite_query_node(state: RAGState) -> RAGState:
     if not rewritten:
         return {**state, "error": "query rewrite returned empty result"}
     retries = int(state.get("retries") or 0)
+    print(f"  [REWRITE] Original: {state['question']}")
+    print(f"  [REWRITE] Rewritten: {rewritten}")
     return {**state, "question": rewritten, "retries": retries + 1}
 
 
@@ -77,7 +80,7 @@ def generate_node(state: RAGState) -> RAGState:
     if not reranked:
         return {**state, "error": "no reranked chunks to generate from"}
     answer = generate_answer(state["question"], reranked)
-    return {**state, "answer": answer}
+    return {**state, "answer": answer["answer"], "source_chunks": answer["source_chunks"]}
 
 
 def should_retry(state: RAGState) -> str:

@@ -122,3 +122,11 @@ class VectorStore:
         ids_to_delete = existing.get("ids") or []
         if ids_to_delete:
             self.collection.delete(ids=ids_to_delete)
+    
+    def reset_collection(self) -> None:
+        """
+        Delete the entire 'papers' collection and recreate it empty.
+        Use this before re-ingesting at a new chunk size.
+        """
+        self.client.delete_collection(name="papers")
+        self.collection = self.client.get_or_create_collection(name="papers")

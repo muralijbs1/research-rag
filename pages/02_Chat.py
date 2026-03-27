@@ -47,7 +47,8 @@ if question:
                     "original_question": question,
                     "chunks": [],
                     "reranked": [],
-                    "answer": {},
+                    "source_chunks": [],
+                    "answer": "",
                     "retries": 0,
                     "quality_passed": False,
                 })
@@ -60,20 +61,20 @@ if question:
                         "source_chunks": [],
                     })
                 else:
-                    result = state["answer"]
-                    st.markdown(result["answer"])
+                    answer = state["answer"]
+                    source_chunks = state.get("source_chunks", [])
+
+                    st.markdown(answer)
 
                     with st.expander("Source chunks"):
-                        for i, chunk in enumerate(result["source_chunks"], 1):
+                        for i, chunk in enumerate(source_chunks, 1):
                             st.markdown(f"**Chunk {i}** (score: `{chunk.get('score', 'n/a'):.4f}`)")
                             st.caption(chunk["text"])
 
-                    st.caption(f"Model: `{result['model']}` | Tokens: `{result['token_count']}`")
-
                     st.session_state.messages.append({
                         "role": "assistant",
-                        "content": result["answer"],
-                        "source_chunks": result["source_chunks"],
+                        "content": answer,
+                        "source_chunks": source_chunks,
                     })
 
             except Exception as e:

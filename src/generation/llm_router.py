@@ -20,17 +20,8 @@ def generate_with_metadata(
     *,
     model: Optional[str] = None,
     system: Optional[str] = None,
+    temperature: Optional[float] = None,
 ) -> dict[str, Any]:
-    """
-    Generate a response and return useful metadata.
-
-    Returns
-    -------
-    dict
-        - "text": final answer text
-        - "model": resolved LiteLLM model name that was used
-        - "token_count": total tokens if available, else None
-    """
     if not prompt or not prompt.strip():
         raise ValueError("prompt must be a non-empty string")
 
@@ -44,6 +35,7 @@ def generate_with_metadata(
             {"role": "system", "content": (system or DEFAULT_SYSTEM_INSTRUCTION)},
             {"role": "user", "content": prompt},
         ],
+        **({"temperature": temperature} if temperature is not None else {}),
     )
 
     text = (response.choices[0].message.content or "").strip()
@@ -69,12 +61,8 @@ def generate(
     *,
     model: Optional[str] = None,
     system: Optional[str] = None,
+    temperature: Optional[float] = None,
 ) -> str:
-    """
-    Generate a response using LiteLLM.
-
-    If ``model`` is not provided, uses ``DEFAULT_LITELLM`` as a fail-safe.
-    """
     if not prompt or not prompt.strip():
         raise ValueError("prompt must be a non-empty string")
 
@@ -82,13 +70,10 @@ def generate(
     if not resolved_model:
         raise ValueError("DEFAULT_LITELLM is empty; set it in your environment or src/config.py")
 
-    return generate_with_metadata(prompt, model=model, system=system)["text"]
+    return generate_with_metadata(prompt, model=model, system=system, temperature=temperature)["text"]
 
 
 def resolve_model(*, model: Optional[str] = None) -> str:
-    """
-    Return the model that will be used (no provider tracking).
-    """
     model_input = (model or "").strip().lower()
 
     if model_input in {"openai"}:

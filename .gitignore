@@ -82,3 +82,10 @@ temp/
 # models/
 # .ragas_cache/
 .ipynb_checkpoints/
+
+
+
+
+mlflow.db
+notebooks/mlruns/
+mlruns/
