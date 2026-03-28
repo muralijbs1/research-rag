@@ -7,15 +7,22 @@ import concurrent.futures
 import streamlit as st
 
 from src.generation.generator import generate_answer
+from src.graph.nodes import intent_check_node
 from src.retrieval.reranker import rerank
 from src.retrieval.retriever import retrieve
 
 st.set_page_config(page_title="Compare Models", page_icon="⚖️", layout="wide")
-st.title("Claude vs GPT-4o")
+st.title("Claude Haiku vs GPT-4o-mini")
 
 question = st.chat_input("Ask a question to compare both models...")
 
 if question:
+    # --- Intent check ---
+    state = intent_check_node({"question": question})
+    if state.get("error"):
+        st.warning(state["error"])
+        st.stop()
+
     with st.spinner("Retrieving and reranking chunks..."):
         chunks = retrieve(question, top_k=20)
         reranked = rerank(question, chunks, top_n=5)
@@ -39,7 +46,7 @@ if question:
     col_left, col_right = st.columns(2)
 
     with col_left:
-        st.subheader("Claude")
+        st.subheader("Claude Haiku")
         st.caption(f"Model: `{result_claude['model']}` | Tokens: `{result_claude['token_count']}`")
         st.markdown(result_claude["answer"])
         with st.expander("Source chunks"):
@@ -48,7 +55,7 @@ if question:
                 st.caption(chunk["text"])
 
     with col_right:
-        st.subheader("GPT-4o")
+        st.subheader("GPT-4o-mini")
         st.caption(f"Model: `{result_openai['model']}` | Tokens: `{result_openai['token_count']}`")
         st.markdown(result_openai["answer"])
         with st.expander("Source chunks"):

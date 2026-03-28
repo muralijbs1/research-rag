@@ -15,12 +15,13 @@ st.caption(
 )
 
 METRICS = ["Faithfulness", "Answer Relevancy", "Context Recall", "Context Precision"]
-COLORS = ["#4A90D9", "#E67E22", "#2ECC71", "#9B59B6"]
+COLORS = ["#4A90D9", "#E67E22", "#2ECC71", "#9B59B6", "#E74C3C", "#1ABC9C",
+          "#F39C12", "#8E44AD", "#2980B9", "#27AE60", "#D35400"]
 
 
 def grouped_bar_chart(data: dict, y_min: float = 0.0):
     labels = list(data.keys())
-    values = np.array(list(data.values()))  # (n_variants, 4)
+    values = np.array(list(data.values()))
 
     n_metrics = len(METRICS)
     n_variants = len(labels)
@@ -79,7 +80,7 @@ def show_section(title: str, data: dict, note: str, y_min: float = 0.0):
 
 
 # ------------------------------------------------------------------
-# 1. Model comparison  (report_ragas_baseline.ipynb)
+# 1. Model comparison
 # ------------------------------------------------------------------
 show_section(
     "1 · Model Comparison",
@@ -92,7 +93,7 @@ show_section(
 )
 
 # ------------------------------------------------------------------
-# 2. Prompt variants  (scratch_prompt_lab.ipynb — all GPT-4o-mini)
+# 2. Prompt variants
 # ------------------------------------------------------------------
 show_section(
     "2 · Prompt Variants  (GPT-4o-mini)",
@@ -102,14 +103,13 @@ show_section(
         "V3 — Citations": [0.8986, 0.8493, 0.8841, 0.7590],
     },
     (
-        "V2 (strict grounding) wins on Faithfulness + Context Recall but hurts Answer Relevancy — "
-        "the model becomes too conservative. V3 (citation instructions) adds overhead without gain. "
-        "V2 is the best overall trade-off."
+        "V2 (strict grounding) wins on Faithfulness + Context Recall but hurts Answer Relevancy. "
+        "V2 is the best overall trade-off and is used in production."
     ),
 )
 
 # ------------------------------------------------------------------
-# 3. Reranker comparison  (report_reranker_comparison.ipynb — GPT-4o-mini)
+# 3. Reranker comparison
 # ------------------------------------------------------------------
 show_section(
     "3 · Reranker Comparison  (GPT-4o-mini)",
@@ -122,4 +122,70 @@ show_section(
         "Cohere wins on Answer Relevancy and Context Precision. "
         "SBERT chosen as default — faithfulness is the higher-priority metric."
     ),
+)
+
+# ------------------------------------------------------------------
+# 4. MLflow Experiment Log — 11 systematic runs
+# ------------------------------------------------------------------
+st.subheader("4 · Systematic Experiment Log (MLflow — 11 Runs)")
+st.caption(
+    "11 experiments tracked with MLflow covering chunk size, overlap, reranker, "
+    "model, rerank_n, and LangGraph query rewriting. All runs use GPT-4o-mini unless noted."
+)
+
+experiment_data = {
+    "Run": [
+        "01 Baseline (500/50)",
+        "02 chunk=200/20",
+        "03 chunk=750/75",
+        "04 chunk=1000/50",
+        "05 overlap=150",
+        "06 Cohere reranker",
+        "07 Claude Haiku",
+        "08 rerank_n=3",
+        "09 rerank_n=7",
+        "10 LangGraph (500)",
+        "11 LangGraph (750)",
+    ],
+    "Faithfulness": [0.9416, 0.9187, 0.9779, 0.9565, 0.8790, 0.9366, 0.9290, 0.9630, 0.9384, 0.9503, 0.9299],
+    "Ans. Relevancy": [0.9300, 0.8045, 0.9748, 0.9699, 0.8946, 0.9310, 0.7214, 0.9311, 0.9336, 0.9336, 0.9344],
+    "Context Recall": [0.9275, 0.7391, 0.9058, 0.9275, 0.8188, 0.9275, 0.9275, 0.9203, 0.8841, 0.9130, 0.9058],
+    "Context Precision": [0.7838, 0.5200, 0.8069, 0.8554, 0.7841, 0.8090, 0.7763, 0.7742, 0.7615, 0.7885, 0.8280],
+}
+
+df_exp = pd.DataFrame(experiment_data).set_index("Run")
+
+styled_exp = (
+    df_exp.style
+    .format("{:.4f}")
+    .highlight_max(axis=0, props="font-weight:bold; color:#2ecc71")
+    .highlight_min(axis=0, props="font-weight:bold; color:#e74c3c")
+)
+st.dataframe(styled_exp, use_container_width=True)
+
+# Line chart across runs
+fig2, ax2 = plt.subplots(figsize=(11, 4))
+x = np.arange(len(df_exp))
+metric_cols = ["Faithfulness", "Ans. Relevancy", "Context Recall", "Context Precision"]
+colors = ["#4A90D9", "#E67E22", "#2ECC71", "#9B59B6"]
+
+for col, color in zip(metric_cols, colors):
+    ax2.plot(x, df_exp[col].values, marker="o", label=col, color=color)
+
+ax2.set_xticks(x)
+ax2.set_xticklabels(df_exp.index.tolist(), rotation=30, ha="right", fontsize=8)
+ax2.set_ylim(0.45, 1.04)
+ax2.set_ylabel("Score")
+ax2.legend(loc="lower left", fontsize=9)
+ax2.yaxis.grid(True, linestyle="--", alpha=0.5)
+ax2.set_axisbelow(True)
+fig2.tight_layout()
+st.pyplot(fig2, use_container_width=True)
+plt.close(fig2)
+
+st.caption(
+    "**Key findings:** chunk_size=750/75 is the overall winner — best faithfulness (0.9779) and "
+    "answer relevancy (0.9748). Small chunks (200) hurt context precision badly (0.52). "
+    "High overlap (150) hurts all metrics. LangGraph adds no measurable quality gain on "
+    "domain-matched eval questions. Production config: chunk=750/75, SBERT, rerank_n=5, GPT-4o-mini."
 )
