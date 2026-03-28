@@ -2,7 +2,7 @@
 Rerank retrieved chunks with either SBERT cross-encoder or Cohere Rerank API.
 
 Controlled by the RERANKER config variable:
-  RERANKER="sbert"  → cross-encoder/ms-marco-MiniLM-L-6-v2 (local, MPS-accelerated)
+  RERANKER="sbert"  → cross-encoder/ms-marco-MiniLM-L-6-v2 (CPU/GPU/MPS auto-detected)
   RERANKER="cohere" → Cohere Rerank API (requires COHERE_API_KEY)
 """
 
@@ -10,6 +10,7 @@ import os
 import time
 from typing import Any
 
+import torch
 from sentence_transformers import CrossEncoder
 
 from src.config import RERANKER
@@ -21,9 +22,15 @@ _sbert_model: CrossEncoder | None = None
 def _get_sbert_model() -> CrossEncoder:
     global _sbert_model
     if _sbert_model is None:
+        if torch.backends.mps.is_available():
+            device = "mps"
+        elif torch.cuda.is_available():
+            device = "cuda"
+        else:
+            device = "cpu"
         _sbert_model = CrossEncoder(
             "cross-encoder/ms-marco-MiniLM-L-6-v2",
-            device="mps",
+            device=device,
         )
     return _sbert_model
 
