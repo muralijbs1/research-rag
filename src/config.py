@@ -4,8 +4,8 @@ import os
 load_dotenv(override=True)
 
 # Chunking
-CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", 500))
-CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", 50))
+CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", 750))
+CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", 75))
 
 # Retrieval
 TOP_K_RETRIEVAL = int(os.getenv("TOP_K_RETRIEVAL", 20))
