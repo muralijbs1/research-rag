@@ -4,10 +4,13 @@ load_dotenv(Path(__file__).parent.parent / ".env", override=True)
 
 import streamlit as st
 
-from src.graph.rag_graph import rag_pipeline
+from src.graph.intent_response import generate_conversation_title, route_message
+from src.generation.llm_router import generate_stream
+from src.generation.prompt_builder import build_prompt
+from src.retrieval.retriever import retrieve
+from src.retrieval.reranker import rerank
 
 st.set_page_config(page_title="Ask a Question", page_icon="💬")
-st.title("Ask a Question")
 
 # --- Sidebar ---
 with st.sidebar:
@@ -15,8 +18,20 @@ with st.sidebar:
     model_choice = st.selectbox(
         "Model",
         options=["openai", "anthropic"],
-        format_func=lambda x: "GPT-4o" if x == "openai" else "Claude",
+        format_func=lambda x: "GPT-4o-mini" if x == "openai" else "Claude Haiku",
     )
+    st.divider()
+    if st.button("New conversation", use_container_width=True):
+        st.session_state.messages = []
+        st.session_state.conversation_title = None
+        st.rerun()
+
+# --- Conversation title placeholder ---
+if "conversation_title" not in st.session_state:
+    st.session_state.conversation_title = None
+
+title_placeholder = st.empty()
+title_placeholder.title(st.session_state.conversation_title or "Ask a Question")
 
 # --- Chat history ---
 if "messages" not in st.session_state:
@@ -25,57 +40,83 @@ if "messages" not in st.session_state:
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
-        if msg["role"] == "assistant" and msg.get("source_chunks"):
-            with st.expander("Source chunks"):
-                for i, chunk in enumerate(msg["source_chunks"], 1):
-                    st.markdown(f"**Chunk {i}** (score: `{chunk.get('score', 'n/a'):.4f}`)")
-                    st.caption(chunk["text"])
+        if msg.get("papers"):
+            st.caption("📄 Sources: " + " · ".join(msg["papers"]))
 
 # --- Input ---
 question = st.chat_input("Ask about your research papers...")
 
 if question:
+    # Generate title from first message
+    if not st.session_state.conversation_title:
+        st.session_state.conversation_title = generate_conversation_title(question)
+        title_placeholder.title(st.session_state.conversation_title)
+
+    # Show user message
     st.session_state.messages.append({"role": "user", "content": question})
     with st.chat_message("user"):
         st.markdown(question)
 
+    # Route through Groq
+    routing = route_message(question, st.session_state.messages[:-1])
+    print(f"[ROUTING] original='{question}' → route='{routing['route']}' → rewritten='{routing.get('rewritten_question')}'")
+
     with st.chat_message("assistant"):
-        with st.spinner("Retrieving and generating..."):
+        if routing["route"] == "chat":
+            message = routing["message"] or "I'm not sure how to help with that. Try asking about AI/ML research!"
+            st.markdown(message)
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": message,
+                "papers": [],
+            })
+
+        else:
             try:
-                state = rag_pipeline.invoke({
-                    "question": question,
-                    "original_question": question,
-                    "chunks": [],
-                    "reranked": [],
-                    "source_chunks": [],
-                    "answer": "",
-                    "retries": 0,
-                    "quality_passed": False,
+                chunks = retrieve(routing["rewritten_question"], top_k=20)
+                reranked = rerank(routing["rewritten_question"], chunks, top_n=5)
+                prompt = build_prompt(question=routing["rewritten_question"], chunks=reranked, top_n=len(reranked))
+
+                # Get unique paper names for citation
+                papers = list(dict.fromkeys(
+                    c.get("paper_name", "")
+                    for c in reranked
+                ))
+                papers = [p for p in papers if p]
+
+                # Build prompt with relevant conversation history
+                history_context = ""
+                relevant_history = [
+                    m for m in st.session_state.messages[:-1]
+                    if m.get("papers")
+                ]
+                if relevant_history:
+                    last_2 = relevant_history[-2:]
+                    history_context = "\n\nPrevious conversation context:\n"
+                    for m in last_2:
+                        role = "User" if m["role"] == "user" else "Assistant"
+                        history_context += f"{role}: {m['content'][:300]}\n"
+
+                if history_context:
+                    prompt = prompt + history_context
+
+                # Stream the response
+                full_response = ""
+                placeholder = st.empty()
+                for token in generate_stream(prompt, model=model_choice):
+                    full_response += token
+                    placeholder.markdown(full_response + "▌")
+                placeholder.markdown(full_response)
+
+                # Show citations
+                if papers:
+                    st.caption("📄 Sources: " + " · ".join(papers))
+
+                st.session_state.messages.append({
+                    "role": "assistant",
+                    "content": full_response,
+                    "papers": papers,
                 })
-
-                if state.get("error"):
-                    st.markdown(state["error"])
-                    st.session_state.messages.append({
-                        "role": "assistant",
-                        "content": state["error"],
-                        "source_chunks": [],
-                    })
-                else:
-                    answer = state["answer"]
-                    source_chunks = state.get("source_chunks", [])
-
-                    st.markdown(answer)
-
-                    with st.expander("Source chunks"):
-                        for i, chunk in enumerate(source_chunks, 1):
-                            st.markdown(f"**Chunk {i}** (score: `{chunk.get('score', 'n/a'):.4f}`)")
-                            st.caption(chunk["text"])
-
-                    st.session_state.messages.append({
-                        "role": "assistant",
-                        "content": answer,
-                        "source_chunks": source_chunks,
-                    })
 
             except Exception as e:
                 st.error(f"Error: {e}")

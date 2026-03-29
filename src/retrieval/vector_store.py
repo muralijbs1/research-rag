@@ -79,7 +79,11 @@ class VectorStore:
                 include_metadata=True,
             )
             return [
-                {"text": match["metadata"]["text"], "score": match["score"]}
+                {
+                    "text": match["metadata"]["text"],
+                    "score": match["score"],
+                    "paper_name": match["metadata"].get("paper_name", ""),
+                }
                 for match in results["matches"]
             ]
         else:
@@ -88,7 +92,7 @@ class VectorStore:
                 n_results=top_k
             )
             return [
-                {"text": doc, "score": score}
+                {"text": doc, "score": score, "paper_name": ""}
                 for doc, score in zip(
                     results["documents"][0],
                     results["distances"][0]

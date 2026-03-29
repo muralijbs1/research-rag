@@ -23,6 +23,8 @@ EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
 DEFAULT_LITELLM = os.getenv("DEFAULT_LITELLM", "openai/gpt-4o-mini")
 OPENAI_LITELLM_MODEL = os.getenv("OPENAI_LITELLM_MODEL", "openai/gpt-4o-mini")
 ANTHROPIC_LITELLM_MODEL = os.getenv("ANTHROPIC_LITELLM_MODEL", "anthropic/claude-haiku-4-5-20251001")
+GROQ_LITELLM_MODEL = os.getenv("GROQ_LITELLM_MODEL", "groq/llama-3.3-70b-versatile")
+
 
 
 # Paths

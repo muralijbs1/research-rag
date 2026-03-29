@@ -23,6 +23,7 @@ openai>=1.50.0
 anthropic>=0.39.0
 tiktoken>=0.8.0
 litellm>=1.0.0
+groq>=0.9.0
 
 # --- Reranking ---
 cohere>=5.0.0
