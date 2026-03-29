@@ -5,6 +5,11 @@ from typing import Any, Optional, TypedDict
 from src.config import RERANK_TOP_N, TOP_K_RETRIEVAL
 from src.generation.generator import generate_answer
 from src.generation.llm_router import generate
+from src.generation.prompts_writer import (
+    INTENT_CHECK_SYSTEM_PROMPT,
+    INTENT_CHECK_USER_TEMPLATE,
+    QUERY_REWRITE_TEMPLATE,
+)
 from src.retrieval.reranker import rerank
 from src.retrieval.retriever import retrieve
 
@@ -24,12 +29,8 @@ class RAGState(TypedDict, total=False):
 
 
 def intent_check_node(state: RAGState) -> RAGState:
-    prompt = (
-        "Is this question related to artificial intelligence, machine learning, or academic research topics? "
-        "Reply with only 'yes' or 'no'.\n\n"
-        f"Question: {state['question']}"
-    )
-    response = (generate(prompt, model="openai", temperature=0,system="You are a helpful assistant that only replies with 'yes' or 'no'.") or "").strip()
+    prompt = INTENT_CHECK_USER_TEMPLATE.format(question=state["question"])
+    response = (generate(prompt, model="openai", temperature=0, system=INTENT_CHECK_SYSTEM_PROMPT) or "").strip()
     if "yes" in response.lower():
         return state
     return {**state, "error": "I can only answer questions about AI/ML research papers. Please ask me something related to the papers in our library!"}
@@ -61,11 +62,7 @@ def check_quality_node(state: RAGState) -> RAGState:
 
 
 def rewrite_query_node(state: RAGState) -> RAGState:
-    prompt = (
-        "Rephrase this question using more specific technical terms from AI/ML research. "
-        "Stay very close to the original meaning. Return only the rephrased question, nothing else.\n\n"
-        f"Original: {state['question']}\nRephrased:"
-    )
+    prompt = QUERY_REWRITE_TEMPLATE.format(question=state["question"])
     rewritten = (generate(prompt, model="openai") or "").strip()
     if not rewritten:
         return {**state, "error": "query rewrite returned empty result"}

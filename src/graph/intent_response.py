@@ -17,43 +17,8 @@ from typing import Any
 
 from src.generation.llm_router import generate
 
-AVAILABLE_PAPERS = [
-    "Attention Is All You Need (Transformer architecture)",
-    "Language Models are Few-Shot Learners (GPT-3)",
-    "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
-    "ReAct: Synergizing Reasoning and Acting in Language Models",
-    "Self-Consistency Improves Chain of Thought Reasoning",
-    "Toolformer: Language Models Can Teach Themselves to Use Tools",
-    "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation",
-    "Mixture-of-Agents Enhances Large Language Model Capabilities",
-    "TinyLlama: An Open-Source Small Language Model",
-    "The AI Scientist: Towards Fully Automated Open-Ended Scientific Discovery",
-    "Agentic Retrieval-Augmented Generation: A Survey on Agentic RAG",
-]
+from src.generation.prompts_writer import GROQ_GATEWAY_SYSTEM_PROMPT, GROQ_TITLE_SYSTEM_PROMPT, GROQ_TITLE_USER_TEMPLATE
 
-SYSTEM_PROMPT = f"""You are a conversational gateway for a Research Paper RAG system.
-
-The system has these papers:
-{chr(10).join(f"- {p}" for p in AVAILABLE_PAPERS)}
-
-Your job is to analyze the conversation history and the current message, then respond with ONLY a JSON object.
-
-If the message is related to AI, ML, deep learning, NLP, transformers, agents, RAG, LLMs, or the papers above:
-- Rewrite the question as a complete standalone question that makes sense without any conversation history
-- The rewritten question should be specific and self-contained — resolve any pronouns or references like "it", "that", "this", "them" using the conversation context
-- Return: {{"route": "rag", "rewritten_question": "your rewritten standalone question here", "message": null}}
-- If the user responds with short agreement or curiosity ("yeah", "tell me more", "explain", "go for it", "yes please", "sure", "ok", "and?", "interesting") AND the previous assistant message mentioned a specific paper or topic — treat it as related and rewrite it as a standalone question about that paper/topic. Route to RAG.
-- If the user sends short feedback or reaction after a RAG answer ("nice", "great", "thanks", "cool", "wow", "nice one", "got it", "ok", "interesting", "makes sense") — treat it as chat, NOT RAG. Respond conversationally and optionally suggest a related follow-up question.
-
-
-If the message is NOT related to research:
-- Respond warmly and conversationally, steer toward the research papers
-- Vary your tone and humor each time — never use the same response twice
-- Mention specific papers when relevant
-- Keep response under 3 sentences
-- Return: {{"route": "chat", "rewritten_question": null, "message": "your friendly response here"}}
-
-CRITICAL: Always return valid JSON only. No markdown, no extra text."""
 
 
 def route_message(
@@ -90,7 +55,7 @@ def route_message(
     raw = generate(
         prompt,
         model="groq",
-        system=SYSTEM_PROMPT,
+        system=GROQ_GATEWAY_SYSTEM_PROMPT,
         temperature=0.7,
     )
 
@@ -115,13 +80,13 @@ def generate_conversation_title(first_message: str) -> str:
     """
     Generate a short conversation title from the first user message.
     """
-    prompt = f"Generate a short title (max 6 words) for a conversation that starts with: '{first_message}'. Return only the title, nothing else."
+    prompt = GROQ_TITLE_USER_TEMPLATE.format(message=first_message)
 
     try:
         title = generate(
             prompt,
             model="groq",
-            system="You generate short descriptive conversation titles. Return only the title text, no quotes, no punctuation at the end.",
+            system=GROQ_TITLE_SYSTEM_PROMPT,
             temperature=0.5,
         )
         return title.strip()[:60]

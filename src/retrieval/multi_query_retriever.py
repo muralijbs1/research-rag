@@ -13,13 +13,9 @@ from typing import Any
 from src.generation.llm_router import generate
 from src.ingestion.embedder import embed_texts
 from src.retrieval.vector_store import VectorStore
+from src.generation.prompts_writer import GROQ_VARIANT_SYSTEM_PROMPT
 
-VARIANT_SYSTEM_PROMPT = """You are an expert at reformulating research questions.
-Given a question, generate 2 alternative phrasings that capture the same information need
-but use different terminology and angle of approach.
 
-Return ONLY a JSON array with exactly 2 strings. No markdown, no extra text.
-Example: ["alternative phrasing 1", "alternative phrasing 2"]"""
 
 
 def generate_query_variants(question: str) -> list[str]:
@@ -31,7 +27,7 @@ def generate_query_variants(question: str) -> list[str]:
         raw = generate(
             f"Question: {question}",
             model="groq",
-            system=VARIANT_SYSTEM_PROMPT,
+            system=GROQ_VARIANT_SYSTEM_PROMPT,
             temperature=0.7,
         )
         clean = raw.strip().strip("```json").strip("```").strip()

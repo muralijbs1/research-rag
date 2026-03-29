@@ -2,12 +2,9 @@ from __future__ import annotations
 
 from typing import Any
 
+from src.generation.prompts_writer import RAG_SYSTEM_INSTRUCTION
 
-DEFAULT_SYSTEM_INSTRUCTION: str = (
-    "You are a helpful research assistant. Stay grounded in the provided context only. "
-    "If the context does not contain enough information to answer, say you don't know "
-    "and briefly describe what is missing. Do not fabricate citations or details."
-)
+
 
 
 def build_prompt(question: str, chunks: list[dict[str, Any]], *, top_n: int = 5) -> str:
@@ -57,7 +54,7 @@ def build_prompt(question: str, chunks: list[dict[str, Any]], *, top_n: int = 5)
     return "\n\n".join(
         [
             "SYSTEM INSTRUCTION",
-            DEFAULT_SYSTEM_INSTRUCTION,
+            RAG_SYSTEM_INSTRUCTION,
             "CONTEXT (top reranked chunks)",
             context_block,
             "USER QUESTION",
