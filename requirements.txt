@@ -55,3 +55,4 @@ structlog>=24.0.0
 # --- Dev helpers ---
 rich>=13.0.0
 
+plotly

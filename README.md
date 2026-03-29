@@ -1,14 +1,20 @@
 # Research Paper RAG Assistant
 
-Ask questions about research papers in plain English and get cited, grounded answers powered by AI.
-
-> **Status:** Phase 1 complete — ingestion pipeline fully working. Phase 2 in progress.
+A full-stack Retrieval-Augmented Generation (RAG) system for ML research papers. Upload PDFs, ask questions, compare LLMs side-by-side, and evaluate pipeline quality — all from a Streamlit UI backed by a LangGraph agentic pipeline.
 
 ---
 
-## What It Does
+## Features
 
-Upload a research paper PDF. Ask a question. The system finds the most relevant sections of the paper, passes them to an AI model, and returns a cited answer — along with a score showing how grounded and reliable that answer is.
+- **PDF Ingestion** — parse, chunk, embed, and store papers in ChromaDB with SHA-256 deduplication
+- **Agentic RAG Pipeline** — LangGraph graph with intent checking, query rewriting, and quality-gated retrieval
+- **Multi-Query Retrieval** — Groq generates 2 query variants per question for broader chunk coverage
+- **Reranking** — SBERT cross-encoder (local, MPS-accelerated) or Cohere Rerank API
+- **Multi-LLM Support** — GPT-4o-mini, Claude Haiku, and Groq (Llama 3.3 70B) via LiteLLM
+- **Conversational Chat** — Groq-powered gateway that routes research questions to RAG and handles small talk naturally
+- **Model Comparison** — side-by-side GPT-4o-mini vs Claude Haiku with latency and token counts
+- **Evaluation** — RAGAS metrics over a 23-question benchmark across 11 papers, logged to MLflow
+- **Paper Library** — browse all ingested papers and chunk counts
 
 ---
 
@@ -16,163 +22,185 @@ Upload a research paper PDF. Ask a question. The system finds the most relevant 
 
 ```
 PDF → extract text → chunk → embed → store in ChromaDB
-Question → embed → search ChromaDB → rerank → generate answer → RAGAS score
-```
 
-1. **Parse** — PyMuPDF extracts clean text from each page
-2. **Chunk** — text is split into overlapping 500-character segments
-3. **Embed** — each chunk is converted to a 1536-dimension vector via OpenAI `text-embedding-3-small`
-4. **Store** — vectors and chunks saved to ChromaDB locally on disk
-5. **Retrieve** — user question is embedded and top-20 similar chunks are fetched
-6. **Rerank** — Cohere Rerank selects the top-5 most relevant chunks *(Phase 2)*
-7. **Generate** — Claude Sonnet or GPT-4o answers using only the retrieved chunks *(Phase 2)*
-8. **Evaluate** — RAGAS scores the answer for faithfulness and relevancy *(Phase 2)*
+User message
+    │
+    ▼
+Groq gateway        ← is this AI/ML research or small talk?
+    ├─ chat          → friendly reply
+    └─ rag
+        ▼
+Multi-query retrieval  ← original + 2 Groq-generated variants → merge + dedup
+        ▼
+SBERT reranker         ← cross-encoder scores, keep top-5
+        ▼
+Quality check          ← avg score > 0? if not → rewrite query (max 2 retries)
+        ▼
+GPT-4o-mini / Claude   ← grounded answer from context chunks
+```
 
 ---
 
-## Tech Stack
+## Setup
 
-| Layer | Tool |
+```bash
+# 1. Clone and enter the repo
+git clone <repo-url>
+cd My_RAG
+
+# 2. Create and activate virtual environment
+python -m venv .venv
+source .venv/bin/activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+pip install -e .
+
+# 4. Configure environment variables
+cp .env.example .env   # fill in your keys
+```
+
+### Required API Keys (`.env`)
+
+```
+OPENAI_API_KEY=...
+ANTHROPIC_API_KEY=...
+GROQ_API_KEY=...
+COHERE_API_KEY=...    # optional — only if RERANKER=cohere
+```
+
+---
+
+## Running the App
+
+```bash
+streamlit run app.py
+```
+
+Navigate to `http://localhost:8501`.
+
+---
+
+## Pages
+
+| Page | Description |
 |---|---|
-| PDF Parsing | PyMuPDF |
-| Chunking | Custom sliding-window chunker |
-| Embeddings | OpenAI `text-embedding-3-small` |
-| Vector Store | ChromaDB (local persistent) |
-| Reranking | Cohere Rerank API + SBERT (Phase 2) |
-| LLMs | Claude Sonnet + GPT-4o via unified router (Phase 2) |
-| Evaluation | RAGAS — faithfulness, answer relevancy, context recall, context precision (Phase 2) |
-| Experiment Tracking | MLflow (Phase 4) |
-| Frontend | Streamlit multi-page app (Phase 3) |
-| Deployment | Streamlit Community Cloud (Phase 5) |
+| **Upload** | Upload a PDF and ingest it into ChromaDB |
+| **Chat** | Conversational RAG with history and auto-generated titles |
+| **Compare** | Side-by-side GPT-4o-mini vs Claude Haiku on the same question |
+| **Evaluation** | Run the eval suite and view RAGAS scores |
+| **Library** | Browse all ingested papers |
 
 ---
 
 ## Project Structure
 
 ```
-research-rag/
-  src/
-    config.py                   # all settings in one place
-    ingestion/
-      pdf_parser.py             # extract text from PDF pages
-      chunker.py                # split text into overlapping chunks
-      embedder.py               # convert chunks to vectors via OpenAI
-      ingest_pipeline.py        # orchestrates full ingestion in one call
-    retrieval/
-      vector_store.py           # ChromaDB wrapper — save, search, delete
-      retriever.py              # embed question, fetch top-k chunks (Phase 2)
-      reranker.py               # Cohere / SBERT reranker (Phase 2)
-    generation/
-      prompt_builder.py         # assemble LLM prompt (Phase 2)
-      llm_router.py             # single entry point for all LLM calls (Phase 2)
-      generator.py              # call router, return answer + sources (Phase 2)
-    evaluation/
-      evaluator.py              # run RAGAS on a test set (Phase 2)
-  notebooks/
-    scratch_pdf_exploration.ipynb
-    report_chunking_experiments.ipynb
-    scratch_embedding_exploration.ipynb
-    scratch_retrieval_check.ipynb
-  app.py                        # Streamlit entry point (Phase 3)
-  pages/                        # Streamlit pages (Phase 3)
+src/
+├── config.py                    # Env-driven config (chunk sizes, model names, paths)
+├── ingestion/
+│   ├── pdf_parser.py            # PyMuPDF: PDF → pages
+│   ├── chunker.py               # Sliding-window chunker (750 chars, 75 overlap)
+│   ├── embedder.py              # OpenAI text-embedding-3-small (batched)
+│   └── ingest_pipeline.py       # Orchestrator with SHA-256 dedup
+├── retrieval/
+│   ├── vector_store.py          # ChromaDB PersistentClient wrapper
+│   ├── retriever.py             # Embed → top-k ChromaDB search
+│   ├── reranker.py              # SBERT cross-encoder or Cohere Rerank
+│   └── multi_query_retriever.py # Groq query expansion + dedup
+├── generation/
+│   ├── llm_router.py            # Central LLM router (LiteLLM). All calls go here.
+│   ├── prompts_writer.py        # All prompts in one place
+│   ├── prompt_builder.py        # Assembles final prompt string
+│   └── generator.py             # High-level RAG generation function
+├── graph/
+│   ├── nodes.py                 # LangGraph nodes + RAGState
+│   ├── rag_graph.py             # StateGraph wiring
+│   └── intent_response.py       # Groq chat gateway + title generation
+└── evaluation/
+    ├── eval_dataset.py          # Loads eval_data/test_questions.json
+    ├── evaluator.py             # RAGAS scoring
+    └── experiment_log.py        # MLflow logging helpers
+
+pages/                           # Streamlit multi-page app
+├── 01_Upload.py
+├── 02_Chat.py
+├── 03_Compare.py
+├── 04_Evaluation.py
+└── 05_Library.py
 ```
 
 ---
 
-## Phase 1 — What Is Built
+## Programmatic Usage
 
-- [x] PDF text extraction with PyMuPDF
-- [x] Overlapping character-based chunker with configurable size and overlap
-- [x] OpenAI embedding with batching (100 chunks per API call)
-- [x] ChromaDB persistent vector store with full CRUD
-- [x] Content-hash deduplication — re-ingesting the same paper overwrites cleanly
-- [x] End-to-end ingestion pipeline tested on *Attention Is All You Need*
-- [x] 4 notebooks covering exploration, chunking experiments, embedding verification, retrieval check
+```python
+# Ingest a paper
+from src.ingestion.ingest_pipeline import run_ingestion
+run_ingestion("uploaded_pdfs/Attention_is_all_you_need.pdf")
+
+# LangGraph pipeline
+from src.graph.rag_graph import rag_pipeline
+result = rag_pipeline.invoke({
+    "question": "What is multi-head attention?",
+    "original_question": "What is multi-head attention?",
+    "retries": 0,
+})
+print(result["answer"]["answer"])
+
+# Individual steps
+from src.retrieval.retriever import retrieve
+from src.retrieval.reranker import rerank
+from src.generation.generator import generate_answer
+
+chunks = retrieve("What is multi-head attention?", top_k=20)
+reranked = rerank("What is multi-head attention?", chunks, top_n=5)
+result = generate_answer("What is multi-head attention?", reranked)
+print(result["answer"])
+```
 
 ---
 
-## Getting Started
-
-### Prerequisites
-
-- Python 3.11+
-- OpenAI API key
-- Anthropic API key *(Phase 2)*
-- Cohere API key *(Phase 2)*
-
-### Setup
+## Testing
 
 ```bash
-# clone the repo
-git clone https://github.com/muralijbs1/research-rag.git
-cd research-rag
-
-# create and activate virtual environment
-python -m venv .venv
-source .venv/bin/activate
-
-# install dependencies
-pip install -r requirements.txt
-
-# install project as a package (needed for notebook imports)
-pip install -e .
-
-# create your .env file
-cp .env.example .env
-# then open .env and add your API keys
-```
-
-### Ingest a Paper
-
-```python
-from src.ingestion.ingest_pipeline import run_ingestion
-
-result = run_ingestion("uploaded_pdfs/your_paper.pdf")
-print(result)  # {'num_chunks': 88}
-```
-
-### Search
-
-```python
-from src.retrieval.vector_store import VectorStore
-from src.ingestion.embedder import embed_texts
-
-vs = VectorStore()
-query_vector = embed_texts(["What is the attention mechanism?"])[0]
-results = vs.search(query_vector, top_k=5)
-
-for r in results:
-    print(r["text"][:200])
+pytest
+pytest --cov=src
 ```
 
 ---
 
-## Roadmap
+## Tech Stack
 
-- [x] Phase 1 — Ingestion pipeline
-- [ ] Phase 2 — Reranker, multi-LLM router, RAGAS baseline
-- [ ] Phase 3 — Streamlit multi-page app
-- [ ] Phase 4 — LangGraph + 10 experiments + MLflow
-- [ ] Phase 5 — Deploy to Streamlit Cloud
+| Layer | Technology |
+|---|---|
+| PDF parsing | PyMuPDF |
+| Embeddings | OpenAI `text-embedding-3-small` |
+| Vector store | ChromaDB (persistent) |
+| Reranking | SBERT `cross-encoder/ms-marco-MiniLM-L-6-v2` / Cohere Rerank |
+| LLM routing | LiteLLM |
+| LLMs | GPT-4o-mini, Claude Haiku, Groq Llama 3.3 70B |
+| Agentic pipeline | LangGraph |
+| UI | Streamlit |
+| Evaluation | RAGAS + MLflow |
 
 ---
 
 ## Configuration
 
-All settings live in `.env` and are read by `src/config.py`:
+All settings in `.env`, read by `src/config.py`:
 
-```
-OPENAI_API_KEY=your-key
-ANTHROPIC_API_KEY=your-key
-COHERE_API_KEY=your-key
-CHROMA_PERSIST_DIR=./chroma_db
-DEFAULT_LLM=gpt4o
-EMBEDDING_MODEL=text-embedding-3-small
-CHUNK_SIZE=500
-CHUNK_OVERLAP=50
-TOP_K_RETRIEVAL=20
-RERANK_TOP_N=5
-```
+| Variable | Default | Purpose |
+|---|---|---|
+| `CHUNK_SIZE` | 750 | Characters per chunk |
+| `CHUNK_OVERLAP` | 75 | Overlap between chunks |
+| `TOP_K_RETRIEVAL` | 20 | Chunks fetched from ChromaDB |
+| `RERANK_TOP_N` | 5 | Chunks kept after reranking |
+| `RERANKER` | `sbert` | `sbert` or `cohere` |
+| `EMBEDDING_MODEL` | `text-embedding-3-small` | OpenAI embedding model |
+| `DEFAULT_LITELLM` | `openai/gpt-4o-mini` | Default generation model |
+| `GROQ_LITELLM_MODEL` | `groq/llama-3.3-70b-versatile` | Groq model |
+| `CHROMA_PERSIST_DIR` | `./chroma_db` | ChromaDB storage path |
 
 ---
 
