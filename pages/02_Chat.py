@@ -7,7 +7,7 @@ import streamlit as st
 from src.graph.intent_response import generate_conversation_title, route_message
 from src.generation.llm_router import generate_stream
 from src.generation.prompt_builder import build_prompt
-from src.retrieval.retriever import retrieve
+from src.retrieval.multi_query_retriever import multi_query_retrieve
 from src.retrieval.reranker import rerank
 
 st.set_page_config(page_title="Ask a Question", page_icon="💬")
@@ -73,8 +73,8 @@ if question:
 
         else:
             try:
-                chunks = retrieve(routing["rewritten_question"], top_k=20)
-                reranked = rerank(routing["rewritten_question"], chunks, top_n=5)
+                chunks = multi_query_retrieve(routing["rewritten_question"], top_k=20)
+                reranked = rerank(routing["rewritten_question"], chunks, top_n=7)
                 prompt = build_prompt(question=routing["rewritten_question"], chunks=reranked, top_n=len(reranked))
 
                 # Get unique paper names for citation

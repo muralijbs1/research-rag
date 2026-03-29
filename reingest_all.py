@@ -1,18 +1,23 @@
 """
 reingest_all.py
 
-Wipes ChromaDB and re-ingests all system papers from uploaded_pdfs/.
+Ingest papers into ChromaDB or Pinecone.
 
 Usage
 -----
-    source .venv/bin/activate
+# Wipe and re-ingest all system papers (default):
     python reingest_all.py
 
-Run this before every chunk size experiment after updating CHUNK_SIZE in .env.
+# Ingest new papers without wiping existing data:
+    python reingest_all.py --folder uploaded_pdfs/new_papers --no-wipe
+
+# Ingest any folder without wiping:
+    python reingest_all.py --folder /path/to/papers --no-wipe
 """
 
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -22,25 +27,50 @@ load_dotenv(override=True)
 from src.ingestion.ingest_pipeline import run_ingestion
 from src.retrieval.vector_store import VectorStore
 
-PAPERS_DIR = Path("/Users/muralikrishnagurijala/Desktop/My_RAG/uploaded_pdfs")
+DEFAULT_PAPERS_DIR = Path("/Users/muralikrishnagurijala/Desktop/My_RAG/uploaded_pdfs")
 
 
 def main() -> None:
-    # --- 1. Wipe ChromaDB --------------------------------------------------
-    print("Resetting ChromaDB collection...")
-    store = VectorStore()
-    store.reset_collection()
-    print("Collection wiped.\n")
+    parser = argparse.ArgumentParser(description="Ingest papers into vector store.")
+    parser.add_argument(
+        "--folder",
+        type=str,
+        default=None,
+        help="Folder containing PDFs to ingest. Defaults to uploaded_pdfs/.",
+    )
+    parser.add_argument(
+        "--no-wipe",
+        action="store_true",
+        help="Skip wiping the collection before ingesting.",
+    )
+    args = parser.parse_args()
 
-    # --- 2. Find all PDFs --------------------------------------------------
-    pdfs = sorted(PAPERS_DIR.glob("*.pdf"))
-    if not pdfs:
-        print(f"No PDFs found in {PAPERS_DIR}")
+    papers_dir = Path(args.folder) if args.folder else DEFAULT_PAPERS_DIR
+    if not papers_dir.is_absolute():
+        papers_dir = DEFAULT_PAPERS_DIR.parent / papers_dir
+
+    if not papers_dir.exists():
+        print(f"Folder not found: {papers_dir}")
         return
 
-    print(f"Found {len(pdfs)} papers. Starting ingestion...\n")
+    store = VectorStore()
 
-    # --- 3. Ingest each paper ----------------------------------------------
+    # --- Wipe unless --no-wipe is set ---
+    if not args.no_wipe:
+        print("Resetting collection...")
+        store.reset_collection()
+        print("Collection wiped.\n")
+    else:
+        print("Skipping wipe — adding to existing data.\n")
+
+    # --- Find all PDFs ---
+    pdfs = sorted(papers_dir.glob("*.pdf"))
+    if not pdfs:
+        print(f"No PDFs found in {papers_dir}")
+        return
+
+    print(f"Found {len(pdfs)} papers in {papers_dir}. Starting ingestion...\n")
+
     total_chunks = 0
     failed = []
 
@@ -55,7 +85,6 @@ def main() -> None:
             failed.append(paper_name)
             print(f"  [{i:02d}/{len(pdfs)}] FAILED: {paper_name} — {e}")
 
-    # --- 4. Summary --------------------------------------------------------
     print(f"\n=== Ingestion Complete ===")
     print(f"  Papers ingested : {len(pdfs) - len(failed)}/{len(pdfs)}")
     print(f"  Total chunks    : {total_chunks}")
