@@ -43,6 +43,7 @@ If the message is related to AI, ML, deep learning, NLP, transformers, agents, R
 - The rewritten question should be specific and self-contained — resolve any pronouns or references like "it", "that", "this", "them" using the conversation context
 - Return: {{"route": "rag", "rewritten_question": "your rewritten standalone question here", "message": null}}
 - If the user responds with short agreement or curiosity ("yeah", "tell me more", "explain", "go for it", "yes please", "sure", "ok", "and?", "interesting") AND the previous assistant message mentioned a specific paper or topic — treat it as related and rewrite it as a standalone question about that paper/topic. Route to RAG.
+- If the user sends short feedback or reaction after a RAG answer ("nice", "great", "thanks", "cool", "wow", "nice one", "got it", "ok", "interesting", "makes sense") — treat it as chat, NOT RAG. Respond conversationally and optionally suggest a related follow-up question.
 
 
 If the message is NOT related to research:
