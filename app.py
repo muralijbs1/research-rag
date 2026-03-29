@@ -9,49 +9,78 @@ st.set_page_config(page_title="Research RAG Assistant", page_icon="📄", layout
 st.markdown("""
 <style>
 [data-testid="stSidebar"] {
-    background: #C9D8E8 !important;
-    border-right: 1px solid #E2E8F0 !important;
+    background: #EDE8DF !important;
+    border-right: 3px solid #C8B89A !important;
+    box-shadow: 3px 0 15px rgba(0,0,0,0.08) !important;
 }
-[data-testid="stSidebar"] * { color: #1E3A5F !important; font-size: 15px !important; }
+[data-testid="stSidebar"] * {
+    font-family: 'Georgia', serif !important;
+    color: #2C2416 !important;
+    font-size: 15px !important;
+}
 [data-testid="stSidebar"] .stButton > button {
     background: #1E3A5F !important;
     color: white !important;
     border: none !important;
-    border-radius: 8px !important;
+    border-radius: 3px !important;
+    font-family: 'Georgia', serif !important;
+    letter-spacing: 0.05em !important;
     font-weight: 400 !important;
 }
+[data-testid="stSidebar"] .stButton > button * { color: white !important; }
 [data-testid="stAppViewContainer"] > .main {
-    background: #F8FAFC !important;
+    background: #FAF7F0 !important;
+    box-shadow: inset 6px 0 20px rgba(180,160,120,0.12),
+                inset -6px 0 20px rgba(180,160,120,0.12) !important;
 }
 [data-testid="stAppViewContainer"] > .main .block-container {
-    padding-top: 2rem !important;
+    max-width: 860px !important;
+    padding-left: 60px !important;
+    padding-right: 60px !important;
+    padding-top: 2.5rem !important;
 }
-html, body, [data-testid="stAppViewContainer"] { color: #1E3A5F !important; }
-h1, h2, h3 { color: #1E3A5F !important; font-weight: 500 !important; }
+html, body, [data-testid="stAppViewContainer"] {
+    font-family: 'Georgia', 'Times New Roman', serif !important;
+    color: #2C2416 !important;
+    line-height: 1.8 !important;
+}
+h1, h2, h3 {
+    font-family: 'Georgia', serif !important;
+    color: #1E3A5F !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em !important;
+    border-bottom: 1px solid #C8B89A !important;
+    padding-bottom: 8px !important;
+}
 p, span, label { font-size: 15px !important; }
 .stButton > button[kind="primary"] {
-    background: #2563EB !important;
+    background: #1E3A5F !important;
     border: none !important;
     color: white !important;
-    border-radius: 8px !important;
+    border-radius: 3px !important;
+    font-family: 'Georgia', serif !important;
+    letter-spacing: 0.05em !important;
     font-weight: 400 !important;
 }
 .stButton > button[kind="secondary"] {
     background: transparent !important;
-    border: 1px solid #E2E8F0 !important;
-    color: #1E3A5F !important;
-    border-radius: 8px !important;
+    border: 1px solid #C8B89A !important;
+    color: #2C2416 !important;
+    border-radius: 3px !important;
+    font-family: 'Georgia', serif !important;
 }
 input, textarea {
-    background: #F8FAFC !important;
-    border: 1px solid #E2E8F0 !important;
-    color: #1E3A5F !important;
-    border-radius: 8px !important;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1.5px solid #C8B89A !important;
+    border-radius: 0 !important;
+    font-family: 'Georgia', serif !important;
+    color: #2C2416 !important;
 }
 [data-testid="stInfo"] {
-    background: #EFF6FF !important;
-    border-left: 3px solid #2563EB !important;
-    color: #1E3A5F !important;
+    background: #F5F0E8 !important;
+    border-left: 3px solid #C8B89A !important;
+    color: #2C2416 !important;
 }
 [data-testid="stWarning"] {
     background: #FFF7ED !important;
@@ -65,28 +94,41 @@ input, textarea {
     background: #F0FDF4 !important;
     border-left: 3px solid #16A34A !important;
 }
-hr { border-color: #E2E8F0 !important; }
+hr { border-color: #C8B89A !important; }
 [data-testid="stFileUploader"] {
-    background: #F1F5F9 !important;
-    border: 1px dashed #2563EB !important;
-    border-radius: 8px !important;
+    background: #FFFDF5 !important;
+    border: 1px dashed #C8B89A !important;
+    border-radius: 4px !important;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.08) !important;
 }
 [data-testid="stSelectbox"] > div {
-    background: #F8FAFC !important;
-    border: 1px solid #E2E8F0 !important;
-    border-radius: 8px !important;
-    color: #1E3A5F !important;
+    background: #FFFDF5 !important;
+    border: 1px solid #C8B89A !important;
+    border-radius: 4px !important;
+    color: #2C2416 !important;
+    font-family: 'Georgia', serif !important;
+}
+/* Equal-height nav card columns */
+[data-testid="stHorizontalBlock"] {
+    align-items: stretch !important;
+}
+[data-testid="stHorizontalBlock"] > div {
+    display: flex !important;
+    flex-direction: column !important;
 }
 /* Page link arrow buttons — per-column colors */
 [data-testid="stPageLink"] a {
     font-size: 18px !important;
     font-weight: 700 !important;
+    font-family: 'Georgia', serif !important;
+    letter-spacing: 0.03em !important;
     display: inline-block !important;
     text-align: center !important;
     padding: 4px 14px !important;
-    border-radius: 8px !important;
+    border-radius: 3px !important;
     text-decoration: none !important;
     line-height: 1.6 !important;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.12) !important;
 }
 .stColumns > div:nth-child(1) [data-testid="stPageLink"] a { background: #DDD6FE !important; color: #4C1D95 !important; }
 .stColumns > div:nth-child(2) [data-testid="stPageLink"] a { background: #FECDD3 !important; color: #881337 !important; }
@@ -97,7 +139,7 @@ hr { border-color: #E2E8F0 !important; }
 """, unsafe_allow_html=True)
 
 st.markdown(
-    "<div style='font-size:52px; font-weight:600; color:#1E3A5F; background:#D1FAE5; display:inline-block; padding:6px 20px 6px 14px; border-radius:10px; margin-bottom:6px; line-height:1.2;'>📄 Research RAG Assistant</div>",
+    "<div style='font-size:52px; font-weight:600; color:#1E3A5F; background:#D1FAE5; display:inline-block; padding:6px 20px 6px 14px; border-radius:10px; margin-bottom:6px; line-height:1.2; box-shadow: inset 0 2px 6px rgba(0,0,0,0.12), inset 0 -1px 3px rgba(255,255,255,0.5);'>📄 Research RAG Assistant</div>",
     unsafe_allow_html=True
 )
 st.markdown(
@@ -119,12 +161,14 @@ for col, (page, icon, label, desc, color) in zip(cols, pages):
     with col:
         st.markdown(f"""
         <div style='background: {color};
-                    border: 1px solid #E2E8F0;
+                    border: 1px solid #C8B89A;
+                    box-shadow: 2px 2px 8px rgba(0,0,0,0.08);
                     border-radius: 12px;
                     padding: 22px 16px;
-                    height: 180px;
+                    min-height: 220px;
                     box-sizing: border-box;
-                    margin-bottom: 4px;
+                    overflow: visible;
+                    margin-bottom: 60px;
                     display: flex;
                     flex-direction: column;'>
             <div style='font-size:26px; margin-bottom:10px;'>{icon}</div>

@@ -15,23 +15,29 @@ st.set_page_config(page_title="Ask a Question", page_icon="💬", layout="wide")
 st.markdown("""
 <style>
 [data-testid="stSidebar"] {
-    background: #C9D8E8 !important;
-    border-right: 1px solid #E2E8F0 !important;
+    background: #EDE8DF !important;
+    border-right: 3px solid #C8B89A !important;
+    box-shadow: 3px 0 15px rgba(0,0,0,0.08) !important;
 }
-[data-testid="stSidebar"] * { color: #1E3A5F !important; font-size: 15px !important; }
+[data-testid="stSidebar"] * {
+    font-family: 'Georgia', serif !important;
+    color: #2C2416 !important;
+    font-size: 15px !important;
+}
 
 /* New conversation button */
 [data-testid="stSidebar"] .stButton > button {
-    background: #5B8DB8 !important;
+    background: #1E3A5F !important;
     color: white !important;
     border: none !important;
-    border-radius: 8px !important;
+    border-radius: 3px !important;
+    font-family: 'Georgia', serif !important;
+    letter-spacing: 0.05em !important;
     font-weight: 600 !important;
     white-space: nowrap !important;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.2), inset 0 -1px 3px rgba(255,255,255,0.1) !important;
 }
-[data-testid="stSidebar"] .stButton > button * {
-    color: white !important;
-}
+[data-testid="stSidebar"] .stButton > button * { color: white !important; }
 [data-testid="stSidebar"] .stButton > button p {
     color: white !important;
     font-size: 14px !important;
@@ -40,10 +46,12 @@ st.markdown("""
 /* Model selector */
 [data-testid="stSidebar"] [data-testid="stSelectbox"] > div,
 [data-testid="stSidebar"] [data-testid="stSelectbox"] > div > div {
-    background: #5B8DB8 !important;
+    background: #1E3A5F !important;
     border: none !important;
-    border-radius: 8px !important;
+    border-radius: 3px !important;
     color: white !important;
+    font-family: 'Georgia', serif !important;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.2), inset 0 -1px 3px rgba(255,255,255,0.1) !important;
 }
 [data-testid="stSidebar"] [data-testid="stSelectbox"] span,
 [data-testid="stSidebar"] [data-testid="stSelectbox"] p,
@@ -53,54 +61,80 @@ st.markdown("""
 }
 
 [data-testid="stAppViewContainer"] > .main {
-    background: #F8FAFC !important;
+    background: #FAF7F0 !important;
+    box-shadow: inset 6px 0 20px rgba(180,160,120,0.12),
+                inset -6px 0 20px rgba(180,160,120,0.12) !important;
 }
 [data-testid="stAppViewContainer"] > .main .block-container {
-    padding-top: 2rem !important;
+    max-width: 860px !important;
+    padding-left: 60px !important;
+    padding-right: 60px !important;
+    padding-top: 2.5rem !important;
 }
-html, body, [data-testid="stAppViewContainer"] { color: #1E3A5F !important; }
-h1, h2, h3 { color: #1E3A5F !important; font-weight: 500 !important; }
+html, body, [data-testid="stAppViewContainer"] {
+    font-family: 'Georgia', 'Times New Roman', serif !important;
+    color: #2C2416 !important;
+    line-height: 1.8 !important;
+}
+h1, h2, h3 {
+    font-family: 'Georgia', serif !important;
+    color: #1E3A5F !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em !important;
+    border-bottom: 1px solid #C8B89A !important;
+    padding-bottom: 8px !important;
+}
 p, span, label { font-size: 15px !important; }
 
-/* User chat bubble */
-[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
-    background: #BAE6FD !important;
+/* Chat messages — base reset */
+[data-testid="stChatMessage"] {
+    background: transparent !important;
     border: none !important;
-    border-radius: 16px 16px 4px 16px !important;
-    padding: 12px 16px !important;
-    margin-left: 15% !important;
-    margin-bottom: 12px !important;
-    color: #1E3A5F !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 10px 0 !important;
+    font-family: 'Georgia', serif !important;
+}
+
+/* User messages — right side */
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
+    margin-left: 25% !important;
+    margin-right: 0 !important;
+    text-align: right !important;
+    border-bottom: 0.5px solid #C8B89A !important;
 }
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) * {
     color: #1E3A5F !important;
+    font-family: 'Georgia', serif !important;
 }
 
-/* Assistant chat bubble */
+/* Assistant messages — left side */
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) {
-    background: #F1F5F9 !important;
-    border: 1px solid #E2E8F0 !important;
-    border-radius: 4px 16px 16px 16px !important;
-    padding: 12px 16px !important;
-    margin-right: 15% !important;
-    margin-bottom: 12px !important;
+    margin-right: 25% !important;
+    margin-left: 0 !important;
+    border-bottom: 0.5px solid #C8B89A !important;
+}
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) * {
+    color: #2C2416 !important;
+    font-family: 'Georgia', serif !important;
 }
 
 /* Chat input */
 [data-testid="stChatInput"] {
-    background: #FFFFFF !important;
-    border: 1px solid #E2E8F0 !important;
-    border-radius: 12px !important;
+    background: #FFFDF5 !important;
+    border: 1px solid #C8B89A !important;
+    border-radius: 4px !important;
 }
 [data-testid="stChatInput"] textarea {
     background: transparent !important;
-    color: #1E3A5F !important;
+    color: #2C2416 !important;
+    font-family: 'Georgia', serif !important;
     border: none !important;
     box-shadow: none !important;
 }
 [data-testid="stChatInput"] button {
     background: #1E3A5F !important;
-    border-radius: 8px !important;
+    border-radius: 3px !important;
     color: white !important;
     border: none !important;
 }
@@ -108,12 +142,13 @@ p, span, label { font-size: 15px !important; }
 /* Citation chips */
 .citation-chip {
     display: inline-block;
-    background: #EFF6FF;
+    background: #F5F0E8;
     color: #1E3A5F;
     font-size: 11px;
+    font-family: 'Georgia', serif;
     padding: 3px 10px;
-    border-radius: 20px;
-    border: 1px solid #BFDBFE;
+    border-radius: 3px;
+    border: 1px solid #C8B89A;
     margin-right: 6px;
     margin-top: 6px;
 }
@@ -150,12 +185,12 @@ title_placeholder = st.empty()
 
 if st.session_state.conversation_title:
     title_placeholder.markdown(
-        f"<div style='font-size:26px; font-weight:600; color:#1E3A5F; background:#DDD6FE; display:inline-block; padding:4px 18px 4px 12px; border-radius:8px; margin-bottom:4px;'>💬 {st.session_state.conversation_title}</div>",
+        f"<div style='font-size:26px; font-weight:600; color:#1E3A5F; background:#DDD6FE; display:inline-block; padding:4px 18px 4px 12px; border-radius:8px; margin-bottom:4px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.12), inset 0 -1px 3px rgba(255,255,255,0.5);'>💬 {st.session_state.conversation_title}</div>",
         unsafe_allow_html=True
     )
 else:
     title_placeholder.markdown(
-        "<div style='font-size:26px; font-weight:600; color:#1E3A5F; background:#DDD6FE; display:inline-block; padding:4px 18px 4px 12px; border-radius:8px; margin-bottom:4px;'>💬 Ask a Question</div>",
+        "<div style='font-size:26px; font-weight:600; color:#1E3A5F; background:#DDD6FE; display:inline-block; padding:4px 18px 4px 12px; border-radius:8px; margin-bottom:4px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.12), inset 0 -1px 3px rgba(255,255,255,0.5);'>💬 Ask a Question</div>",
         unsafe_allow_html=True
     )
 
@@ -164,17 +199,20 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
+    if msg["role"] == "user":
+        st.markdown("<div style='text-align:right; font-size:11px; color:#9CA3AF; margin-bottom:2px; font-family:Georgia,serif;'>You</div>", unsafe_allow_html=True)
+    else:
+        st.markdown("<div style='font-size:11px; color:#9CA3AF; margin-bottom:2px; font-family:Georgia,serif;'>Assistant</div>", unsafe_allow_html=True)
+    avatar = "👤" if msg["role"] == "user" else "🤖"
+    with st.chat_message(msg["role"], avatar=avatar):
         st.markdown(msg["content"])
         if msg.get("papers"):
-            chips = "".join(
-                f"<span class='citation-chip'>📄 {p}</span>"
-                for p in msg["papers"]
-            )
-            st.markdown(
-                f"<div style='margin-top:8px;'>{chips}</div>",
-                unsafe_allow_html=True
-            )
+            with st.expander("📄 References"):
+                chips = "".join(
+                    f"<span style='display:inline-block; background:#F5F0E8; color:#1E3A5F; font-size:12px; padding:4px 12px; border-radius:3px; border:1px solid #C8B89A; margin-right:6px; margin-top:6px; font-family:Georgia,serif;'>📄 {p}</span>"
+                    for p in msg["papers"]
+                )
+                st.markdown(f"<div>{chips}</div>", unsafe_allow_html=True)
 
 # --- Input ---
 question = st.chat_input("Ask about your research papers...")
@@ -183,18 +221,20 @@ if question:
     if not st.session_state.conversation_title:
         st.session_state.conversation_title = generate_conversation_title(question)
         title_placeholder.markdown(
-            f"<div style='font-size:26px; font-weight:600; color:#1E3A5F; background:#DDD6FE; display:inline-block; padding:4px 18px 4px 12px; border-radius:8px; margin-bottom:4px;'>💬 {st.session_state.conversation_title}</div>",
+            f"<div style='font-size:26px; font-weight:600; color:#1E3A5F; background:#DDD6FE; display:inline-block; padding:4px 18px 4px 12px; border-radius:8px; margin-bottom:4px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.12), inset 0 -1px 3px rgba(255,255,255,0.5);'>💬 {st.session_state.conversation_title}</div>",
             unsafe_allow_html=True
         )
 
     st.session_state.messages.append({"role": "user", "content": question})
-    with st.chat_message("user"):
+    st.markdown("<div style='text-align:right; font-size:11px; color:#9CA3AF; margin-bottom:2px; font-family:Georgia,serif;'>You</div>", unsafe_allow_html=True)
+    with st.chat_message("user", avatar="👤"):
         st.markdown(question)
 
     routing = route_message(question, st.session_state.messages[:-1])
     print(f"[ROUTING] original='{question}' → route='{routing['route']}' → rewritten='{routing.get('rewritten_question')}'")
 
-    with st.chat_message("assistant"):
+    st.markdown("<div style='font-size:11px; color:#9CA3AF; margin-bottom:2px; font-family:Georgia,serif;'>Assistant</div>", unsafe_allow_html=True)
+    with st.chat_message("assistant", avatar="🤖"):
         if routing["route"] == "chat":
             message = routing["message"] or "I'm not sure how to help with that. Try asking about AI/ML research!"
             st.markdown(message)
@@ -239,14 +279,12 @@ if question:
                 placeholder.markdown(full_response)
 
                 if papers:
-                    chips = "".join(
-                        f"<span class='citation-chip'>📄 {p}</span>"
-                        for p in papers
-                    )
-                    st.markdown(
-                        f"<div style='margin-top:8px;'>{chips}</div>",
-                        unsafe_allow_html=True
-                    )
+                    with st.expander("📄 References"):
+                        chips = "".join(
+                            f"<span style='display:inline-block; background:#F5F0E8; color:#1E3A5F; font-size:12px; padding:4px 12px; border-radius:3px; border:1px solid #C8B89A; margin-right:6px; margin-top:6px; font-family:Georgia,serif;'>📄 {p}</span>"
+                            for p in papers
+                        )
+                        st.markdown(f"<div>{chips}</div>", unsafe_allow_html=True)
 
                 st.session_state.messages.append({
                     "role": "assistant",

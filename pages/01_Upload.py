@@ -11,53 +11,82 @@ st.set_page_config(page_title="Upload Paper", page_icon="📤", layout="wide")
 st.markdown("""
 <style>
 [data-testid="stSidebar"] {
-    background: #C9D8E8 !important;
-    border-right: 1px solid #E2E8F0 !important;
+    background: #EDE8DF !important;
+    border-right: 3px solid #C8B89A !important;
+    box-shadow: 3px 0 15px rgba(0,0,0,0.08) !important;
 }
-[data-testid="stSidebar"] * { color: #1E3A5F !important; font-size: 15px !important; }
+[data-testid="stSidebar"] * {
+    font-family: 'Georgia', serif !important;
+    color: #2C2416 !important;
+    font-size: 15px !important;
+}
 [data-testid="stAppViewContainer"] > .main {
-    background: #F8FAFC !important;
+    background: #FAF7F0 !important;
+    box-shadow: inset 6px 0 20px rgba(180,160,120,0.12),
+                inset -6px 0 20px rgba(180,160,120,0.12) !important;
 }
 [data-testid="stAppViewContainer"] > .main .block-container {
-    padding-top: 2rem !important;
+    max-width: 860px !important;
+    padding-left: 60px !important;
+    padding-right: 60px !important;
+    padding-top: 2.5rem !important;
 }
-html, body, [data-testid="stAppViewContainer"] { color: #1E3A5F !important; }
-h1, h2, h3 { color: #1E3A5F !important; font-weight: 500 !important; }
+html, body, [data-testid="stAppViewContainer"] {
+    font-family: 'Georgia', 'Times New Roman', serif !important;
+    color: #2C2416 !important;
+    line-height: 1.8 !important;
+}
+h1, h2, h3 {
+    font-family: 'Georgia', serif !important;
+    color: #1E3A5F !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em !important;
+    border-bottom: 1px solid #C8B89A !important;
+    padding-bottom: 8px !important;
+}
 p, span, label { font-size: 15px !important; }
 .stButton > button[kind="primary"] {
-    background: #2563EB !important;
+    background: #1E3A5F !important;
     border: none !important;
     color: white !important;
-    border-radius: 8px !important;
+    border-radius: 3px !important;
+    font-family: 'Georgia', serif !important;
+    letter-spacing: 0.05em !important;
     font-weight: 400 !important;
 }
 .stButton > button[kind="secondary"] {
     background: transparent !important;
-    border: 1px solid #E2E8F0 !important;
-    color: #1E3A5F !important;
-    border-radius: 8px !important;
+    border: 1px solid #C8B89A !important;
+    color: #2C2416 !important;
+    border-radius: 3px !important;
+    font-family: 'Georgia', serif !important;
 }
 input, textarea {
-    background: #F8FAFC !important;
-    border: 1px solid #E2E8F0 !important;
-    color: #1E3A5F !important;
-    border-radius: 8px !important;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1.5px solid #C8B89A !important;
+    border-radius: 0 !important;
+    font-family: 'Georgia', serif !important;
+    color: #2C2416 !important;
 }
 
-/* Paper name input — navy editable signal */
+/* Paper name input */
 [data-testid="stTextInput"] input {
-    background: #EFF6FF !important;
-    border: 1px solid #2563EB !important;
-    color: #1E3A5F !important;
-    border-radius: 8px !important;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1.5px solid #C8B89A !important;
+    border-radius: 0 !important;
+    font-family: 'Georgia', serif !important;
+    color: #2C2416 !important;
     transition: border 0.2s !important;
 }
 [data-testid="stTextInput"] input:focus {
-    border: 1px solid #1E3A5F !important;
-    box-shadow: 0 0 0 2px rgba(37,99,235,0.15) !important;
+    border-bottom: 1.5px solid #1E3A5F !important;
+    box-shadow: none !important;
 }
 [data-testid="stTextInput"] label {
-    color: #2563EB !important;
+    color: #1E3A5F !important;
+    font-family: 'Georgia', serif !important;
     font-size: 13px !important;
 }
 
@@ -76,18 +105,19 @@ input, textarea {
 
 /* File uploader */
 [data-testid="stFileUploader"] {
-    background: #F1F5F9 !important;
-    border: 1px dashed #2563EB !important;
-    border-radius: 12px !important;
+    background: #FFFDF5 !important;
+    border: 1px dashed #C8B89A !important;
+    border-radius: 4px !important;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.08) !important;
 }
 [data-testid="stFileUploader"] > div {
-    background: #F1F5F9 !important;
-    border-radius: 12px !important;
+    background: #FFFDF5 !important;
+    border-radius: 4px !important;
 }
 [data-testid="stFileUploaderDropzone"] {
-    background: #F1F5F9 !important;
+    background: #FFFDF5 !important;
     border: none !important;
-    border-radius: 8px !important;
+    border-radius: 4px !important;
 }
 [data-testid="stFileUploader"] *,
 [data-testid="stFileUploaderDropzone"] *,
@@ -95,14 +125,15 @@ input, textarea {
 [data-testid="stFileUploader"] span,
 [data-testid="stFileUploader"] p,
 [data-testid="stFileUploader"] small {
-    color: #1E3A5F !important;
+    color: #2C2416 !important;
+    font-family: 'Georgia', serif !important;
 }
 [data-testid="stFileUploaderDropzone"] button,
 [data-testid="stFileUploader"] button {
-    background: #2563EB !important;
+    background: #1E3A5F !important;
     color: white !important;
     border: none !important;
-    border-radius: 8px !important;
+    border-radius: 3px !important;
 }
 [data-testid="stFileUploaderDropzone"] button *,
 [data-testid="stFileUploader"] button * {
@@ -112,7 +143,7 @@ input, textarea {
 """, unsafe_allow_html=True)
 
 st.markdown(
-    "<div style='font-size:36px; font-weight:600; color:#1E3A5F; background:#FEF3C7; display:inline-block; padding:5px 20px 5px 14px; border-radius:10px; margin-bottom:6px;'>📤 Upload Research Paper</div>",
+    "<div style='font-size:36px; font-weight:600; color:#1E3A5F; background:#FEF3C7; display:inline-block; padding:5px 20px 5px 14px; border-radius:10px; margin-bottom:6px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.12), inset 0 -1px 3px rgba(255,255,255,0.5);'>📤 Upload Research Paper</div>",
     unsafe_allow_html=True
 )
 

@@ -15,39 +15,63 @@ st.set_page_config(page_title="Compare Models", page_icon="⚖️", layout="wide
 st.markdown("""
 <style>
 [data-testid="stSidebar"] {
-    background: #C9D8E8 !important;
-    border-right: 1px solid #E2E8F0 !important;
+    background: #EDE8DF !important;
+    border-right: 3px solid #C8B89A !important;
+    box-shadow: 3px 0 15px rgba(0,0,0,0.08) !important;
 }
-[data-testid="stSidebar"] * { color: #1E3A5F !important; font-size: 15px !important; }
+[data-testid="stSidebar"] * {
+    font-family: 'Georgia', serif !important;
+    color: #2C2416 !important;
+    font-size: 15px !important;
+}
 [data-testid="stAppViewContainer"] > .main {
-    background: #F8FAFC !important;
+    background: #FAF7F0 !important;
+    box-shadow: inset 6px 0 20px rgba(180,160,120,0.12),
+                inset -6px 0 20px rgba(180,160,120,0.12) !important;
 }
 [data-testid="stAppViewContainer"] > .main .block-container {
-    padding-top: 2rem !important;
+    max-width: 860px !important;
+    padding-left: 60px !important;
+    padding-right: 60px !important;
+    padding-top: 2.5rem !important;
 }
-html, body, [data-testid="stAppViewContainer"] { color: #1E3A5F !important; }
-h1, h2, h3 { color: #1E3A5F !important; font-weight: 500 !important; }
+html, body, [data-testid="stAppViewContainer"] {
+    font-family: 'Georgia', 'Times New Roman', serif !important;
+    color: #2C2416 !important;
+    line-height: 1.8 !important;
+}
+h1, h2, h3 {
+    font-family: 'Georgia', serif !important;
+    color: #1E3A5F !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em !important;
+    border-bottom: 1px solid #C8B89A !important;
+    padding-bottom: 8px !important;
+}
 p, span, label { font-size: 15px !important; }
 input, textarea {
-    background: #F8FAFC !important;
-    border: 1px solid #E2E8F0 !important;
-    color: #1E3A5F !important;
-    border-radius: 8px !important;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1.5px solid #C8B89A !important;
+    border-radius: 0 !important;
+    font-family: 'Georgia', serif !important;
+    color: #2C2416 !important;
 }
 [data-testid="stChatInput"] {
-    background: #FFFFFF !important;
-    border: 1px solid #E2E8F0 !important;
-    border-radius: 12px !important;
+    background: #FFFDF5 !important;
+    border: 1px solid #C8B89A !important;
+    border-radius: 4px !important;
 }
 [data-testid="stChatInput"] textarea {
     background: transparent !important;
-    color: #1E3A5F !important;
+    color: #2C2416 !important;
+    font-family: 'Georgia', serif !important;
     border: none !important;
     box-shadow: none !important;
 }
 [data-testid="stChatInput"] button {
     background: #1E3A5F !important;
-    border-radius: 8px !important;
+    border-radius: 3px !important;
     color: white !important;
     border: none !important;
 }
@@ -63,7 +87,7 @@ input, textarea {
 """, unsafe_allow_html=True)
 
 st.markdown(
-    "<div style='font-size:36px; font-weight:600; color:#1E3A5F; background:#FECDD3; display:inline-block; padding:5px 20px 5px 14px; border-radius:10px; margin-bottom:4px;'>⚖️ Compare Models</div>",
+    "<div style='font-size:36px; font-weight:600; color:#1E3A5F; background:#FECDD3; display:inline-block; padding:5px 20px 5px 14px; border-radius:10px; margin-bottom:4px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.12), inset 0 -1px 3px rgba(255,255,255,0.5);'>⚖️ Compare Models</div>",
     unsafe_allow_html=True
 )
 st.markdown(
@@ -134,11 +158,12 @@ if question:
             <div style='width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.7);'></div>
             <span style='font-size:14px; font-weight:500; color:white;'>Claude Haiku</span>
         </div>
-        <div style='background: #FFFFFF;
-                    border: 1px solid #E2E8F0;
+        <div style='background: #FFFDF5;
+                    border: 1px solid #C8B89A;
                     border-top: none;
-                    border-radius: 0 0 10px 10px;
-                    padding: 16px;'>
+                    border-radius: 0 0 4px 4px;
+                    padding: 16px;
+                    box-shadow: 2px 2px 8px rgba(0,0,0,0.08);'>
         </div>
         """, unsafe_allow_html=True)
         st.markdown(result_claude["answer"])
@@ -165,11 +190,12 @@ if question:
             <div style='width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.7);'></div>
             <span style='font-size:14px; font-weight:500; color:white;'>GPT-4o-mini</span>
         </div>
-        <div style='background: #FFFFFF;
-                    border: 1px solid #E2E8F0;
+        <div style='background: #FFFDF5;
+                    border: 1px solid #C8B89A;
                     border-top: none;
-                    border-radius: 0 0 10px 10px;
-                    padding: 16px;'>
+                    border-radius: 0 0 4px 4px;
+                    padding: 16px;
+                    box-shadow: 2px 2px 8px rgba(0,0,0,0.08);'>
         </div>
         """, unsafe_allow_html=True)
         st.markdown(result_openai["answer"])
