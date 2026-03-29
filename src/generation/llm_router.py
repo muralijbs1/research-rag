@@ -12,8 +12,7 @@ from typing import Any, Optional
 from litellm import completion
 
 from src.config import ANTHROPIC_LITELLM_MODEL, DEFAULT_LITELLM, GROQ_LITELLM_MODEL, OPENAI_LITELLM_MODEL
-from src.generation.prompt_builder import DEFAULT_SYSTEM_INSTRUCTION
-
+from src.generation.prompts_writer import RAG_SYSTEM_INSTRUCTION
 
 def generate_with_metadata(
     prompt: str,
@@ -32,7 +31,7 @@ def generate_with_metadata(
     response = completion(
         model=resolved_model,
         messages=[
-            {"role": "system", "content": (system or DEFAULT_SYSTEM_INSTRUCTION)},
+            {"role": "system", "content": (system or RAG_SYSTEM_INSTRUCTION)},
             {"role": "user", "content": prompt},
         ],
         **({"temperature": temperature} if temperature is not None else {}),
@@ -92,7 +91,7 @@ def generate_stream(
     response = completion(
         model=resolved_model,
         messages=[
-            {"role": "system", "content": (system or DEFAULT_SYSTEM_INSTRUCTION)},
+            {"role": "system", "content": (system or RAG_SYSTEM_INSTRUCTION)},
             {"role": "user", "content": prompt},
         ],
         stream=True,

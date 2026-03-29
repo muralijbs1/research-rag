@@ -9,6 +9,7 @@ from src.generation.prompts_writer import (
     INTENT_CHECK_SYSTEM_PROMPT,
     INTENT_CHECK_USER_TEMPLATE,
     QUERY_REWRITE_TEMPLATE,
+    GROQ_COMPARE_REJECTION_SYSTEM_PROMPT,
 )
 from src.retrieval.reranker import rerank
 from src.retrieval.retriever import retrieve
@@ -33,8 +34,15 @@ def intent_check_node(state: RAGState) -> RAGState:
     response = (generate(prompt, model="openai", temperature=0, system=INTENT_CHECK_SYSTEM_PROMPT) or "").strip()
     if "yes" in response.lower():
         return state
-    return {**state, "error": "I can only answer questions about AI/ML research papers. Please ask me something related to the papers in our library!"}
-
+    
+    rejection = (generate(
+        f"User asked: {state['question']}",
+        model="groq",
+        system=GROQ_COMPARE_REJECTION_SYSTEM_PROMPT,
+        temperature=0.9,
+    ) or "This page is for research questions only!").strip()
+    
+    return {**state, "error": rejection}
 
 def retrieve_node(state: RAGState) -> RAGState:
     if not state.get("question", "").strip():
