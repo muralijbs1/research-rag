@@ -11,37 +11,35 @@ st.set_page_config(page_title="Evaluation Results", page_icon="📊", layout="wi
 st.markdown("""
 <style>
 [data-testid="stSidebar"] {
-    background: linear-gradient(to right, #BEB6AA, #C8C0B4, #A89E92) !important;
-    border-right: 18px solid #1A1020 !important;
-    box-shadow: inset -20px 0 40px rgba(0,0,0,0.28) !important;
+    background: #C9D8E8 !important;
+    border-right: 1px solid #E2E8F0 !important;
 }
-[data-testid="stSidebar"] * { color: #2E2820 !important; font-size: 15px !important; }
+[data-testid="stSidebar"] * { color: #1E3A5F !important; font-size: 15px !important; }
 [data-testid="stAppViewContainer"] > .main {
-    background: linear-gradient(to right, #2A2040 0%, #17112E 45%, #09080F 100%) !important;
-    box-shadow: inset -24px 0 60px rgba(0,0,0,0.55) !important;
+    background: #F8FAFC !important;
 }
 [data-testid="stAppViewContainer"] > .main .block-container {
     padding-top: 2rem !important;
 }
-html, body, [data-testid="stAppViewContainer"] { color: rgba(200,195,225,0.85) !important; }
-h1, h2, h3 { color: rgba(220,215,240,0.92) !important; font-weight: 500 !important; }
+html, body, [data-testid="stAppViewContainer"] { color: #1E3A5F !important; }
+h1, h2, h3 { color: #1E3A5F !important; font-weight: 500 !important; }
 p, span, label { font-size: 15px !important; }
-hr { border-color: rgba(255,255,255,0.06) !important; }
+hr { border-color: #E2E8F0 !important; }
 [data-testid="stSelectbox"] > div {
-    background: rgba(20,14,36,0.5) !important;
-    border: 0.5px solid rgba(255,255,255,0.08) !important;
+    background: #F8FAFC !important;
+    border: 1px solid #E2E8F0 !important;
     border-radius: 8px !important;
-    color: rgba(200,195,225,0.85) !important;
+    color: #1E3A5F !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
 st.markdown(
-    "<div style='font-size:36px; font-weight:600; color:#F0C060; margin-bottom:4px;'>📊 RAGAS Evaluation Results</div>",
+    "<div style='font-size:36px; font-weight:600; color:#1E3A5F; background:#D1FAE5; display:inline-block; padding:5px 20px 5px 14px; border-radius:10px; margin-bottom:4px;'>📊 RAGAS Evaluation Results</div>",
     unsafe_allow_html=True
 )
 st.markdown(
-    "<div style='font-size:15px; color:rgba(200,195,225,0.6); margin-bottom:24px;'>"
+    "<div style='font-size:15px; color:#64748B; margin-bottom:24px;'>"
     "11 MLflow experiments · 23 questions · 4 RAGAS metrics · hover to explore</div>",
     unsafe_allow_html=True
 )
@@ -53,32 +51,32 @@ BAR_COLORS = ["#7C3AED", "#E8844A", "#2ECC71", "#38BDF8", "#F472B6"]
 PLOT_LAYOUT = dict(
     paper_bgcolor="rgba(0,0,0,0)",
     plot_bgcolor="rgba(0,0,0,0)",
-    font=dict(color="rgba(200,195,225,0.85)", size=12),
+    font=dict(color="#1E3A5F", size=12),
     legend=dict(
-        bgcolor="rgba(30,20,50,0.8)",
-        bordercolor="rgba(255,255,255,0.1)",
+        bgcolor="#FFFFFF",
+        bordercolor="#E2E8F0",
         borderwidth=1,
         font=dict(size=12),
     ),
     xaxis=dict(
-        gridcolor="rgba(255,255,255,0.05)",
-        tickfont=dict(color="rgba(200,195,225,0.75)"),
+        gridcolor="#E2E8F0",
+        tickfont=dict(color="#64748B"),
         showline=True,
-        linecolor="rgba(255,255,255,0.1)",
+        linecolor="#E2E8F0",
     ),
     yaxis=dict(
-        gridcolor="rgba(255,255,255,0.05)",
-        tickfont=dict(color="rgba(200,195,225,0.75)"),
+        gridcolor="#E2E8F0",
+        tickfont=dict(color="#64748B"),
         showline=True,
-        linecolor="rgba(255,255,255,0.1)",
+        linecolor="#E2E8F0",
         range=[0.0, 1.08],
     ),
     margin=dict(l=50, r=20, t=30, b=50),
     hovermode="x unified",
     hoverlabel=dict(
-        bgcolor="rgba(20,14,36,0.95)",
-        bordercolor="rgba(124,58,237,0.6)",
-        font=dict(color="rgba(200,195,225,0.9)", size=13),
+        bgcolor="#FFFFFF",
+        bordercolor="#E2E8F0",
+        font=dict(color="#1E3A5F", size=13),
     ),
 )
 
@@ -105,35 +103,35 @@ for col, metric, color in zip(cols, METRICS, card_colors):
     short_run = best_run.split(" ", 1)[1] if " " in best_run else best_run
     with col:
         st.markdown(f"""
-        <div style='background: rgba(42,32,64,0.5);
-                    border: 0.5px solid {color}44;
+        <div style='background: #FFFFFF;
+                    border: 1px solid #E2E8F0;
                     border-top: 3px solid {color};
                     border-radius: 10px;
                     padding: 16px;
                     margin-bottom: 24px;'>
-            <div style='font-size:12px; color:rgba(200,195,225,0.55); margin-bottom:4px;'>{metric}</div>
+            <div style='font-size:12px; color:#64748B; margin-bottom:4px;'>{metric}</div>
             <div style='font-size:28px; font-weight:600; color:{color};'>{best_val:.4f}</div>
-            <div style='font-size:11px; color:rgba(200,195,225,0.45); margin-top:4px;'>Best: {short_run}</div>
+            <div style='font-size:11px; color:#64748B; margin-top:4px;'>Best: {short_run}</div>
         </div>
         """, unsafe_allow_html=True)
 
-st.markdown("<hr style='border-color:rgba(255,255,255,0.06); margin-bottom:24px;'>", unsafe_allow_html=True)
+st.markdown("<hr style='border-color:#E2E8F0; margin-bottom:24px;'>", unsafe_allow_html=True)
 
 # --- Section helper ---
 def section_header(title, narrative):
     st.markdown(
-        f"<div style='font-size:20px; font-weight:600; color:rgba(220,215,240,0.92); margin-bottom:4px;'>{title}</div>",
+        f"<div style='font-size:20px; font-weight:600; color:#1E3A5F; margin-bottom:4px;'>{title}</div>",
         unsafe_allow_html=True
     )
     st.markdown(
-        f"<div style='font-size:14px; color:rgba(200,195,225,0.55); margin-bottom:12px;'>{narrative}</div>",
+        f"<div style='font-size:14px; color:#64748B; margin-bottom:12px;'>{narrative}</div>",
         unsafe_allow_html=True
     )
 
-def note_box(note, color="#7C3AED"):
+def note_box(note, color="#1E3A5F"):
     st.markdown(
-        f"<div style='background:rgba(124,58,237,0.08); border-left:3px solid {color}88; "
-        f"border-radius:4px; padding:10px 14px; font-size:13px; color:rgba(200,195,225,0.7); "
+        f"<div style='background:#BFDBFE; border-left:3px solid {color}; "
+        f"border-radius:4px; padding:10px 14px; font-size:13px; color:#1E3A5F; "
         f"margin:8px 0 24px;'>💡 {note}</div>",
         unsafe_allow_html=True
     )
@@ -150,16 +148,16 @@ def plotly_bar(data, y_min=0.0):
             marker_opacity=0.85,
             text=[f"{v:.3f}" for v in vals],
             textposition="outside",
-            textfont=dict(size=11, color="rgba(200,195,225,0.8)"),
+            textfont=dict(size=11, color="#64748B"),
             hovertemplate=f"<b>{label}</b><br>%{{x}}: <b>%{{y:.4f}}</b><extra></extra>",
         ))
     layout = {**PLOT_LAYOUT, "barmode": "group"}
     layout["yaxis"] = dict(
-        gridcolor="rgba(255,255,255,0.05)",
-        tickfont=dict(color="rgba(200,195,225,0.75)"),
+        gridcolor="#E2E8F0",
+        tickfont=dict(color="#64748B"),
         range=[y_min, 1.1],
         showline=True,
-        linecolor="rgba(255,255,255,0.1)",
+        linecolor="#E2E8F0",
     )
     layout["hovermode"] = "x unified"
     fig.update_layout(**layout)
@@ -201,7 +199,7 @@ st.plotly_chart(plotly_bar({
 note_box("SBERT wins on Faithfulness by a large margin (0.971 vs 0.898). Cohere wins on Answer Relevancy. SBERT chosen as default.")
 
 # --- 4. MLflow Experiment Log ---
-st.markdown("<hr style='border-color:rgba(255,255,255,0.06); margin-bottom:24px;'>", unsafe_allow_html=True)
+st.markdown("<hr style='border-color:#E2E8F0; margin-bottom:24px;'>", unsafe_allow_html=True)
 section_header(
     "4 · Systematic Experiment Log (MLflow — 11 Runs)",
     "11 experiments covering chunk size, overlap, reranker, model, rerank_n, and LangGraph. Hover to see all metrics per run."
@@ -248,26 +246,26 @@ fig2.add_vline(
     x=best_idx,
     line_width=1.5,
     line_dash="dash",
-    line_color="rgba(240,192,96,0.5)",
+    line_color="rgba(30,58,95,0.4)",
     annotation_text="Best",
-    annotation_font_color="rgba(240,192,96,0.8)",
+    annotation_font_color="#1E3A5F",
     annotation_font_size=12,
 )
 
 line_layout = {**PLOT_LAYOUT}
 line_layout["xaxis"] = dict(
-    gridcolor="rgba(255,255,255,0.05)",
-    tickfont=dict(color="rgba(200,195,225,0.75)", size=10),
+    gridcolor="#E2E8F0",
+    tickfont=dict(color="#64748B", size=10),
     tickangle=-30,
     showline=True,
-    linecolor="rgba(255,255,255,0.1)",
+    linecolor="#E2E8F0",
 )
 line_layout["yaxis"] = dict(
-    gridcolor="rgba(255,255,255,0.05)",
-    tickfont=dict(color="rgba(200,195,225,0.75)"),
+    gridcolor="#E2E8F0",
+    tickfont=dict(color="#64748B"),
     range=[0.45, 1.05],
     showline=True,
-    linecolor="rgba(255,255,255,0.1)",
+    linecolor="#E2E8F0",
 )
 line_layout["margin"] = dict(l=50, r=20, t=30, b=120)
 line_layout["hovermode"] = "x unified"
@@ -275,8 +273,8 @@ fig2.update_layout(**line_layout)
 st.plotly_chart(fig2, use_container_width=True)
 
 st.markdown(
-    "<div style='background:rgba(240,192,96,0.08); border-left:3px solid rgba(240,192,96,0.6); "
-    "border-radius:4px; padding:12px 16px; font-size:14px; color:rgba(240,192,96,0.9); margin-top:4px;'>"
+    "<div style='background:#BFDBFE; border-left:3px solid #1E3A5F; "
+    "border-radius:4px; padding:12px 16px; font-size:14px; color:#1E3A5F; margin-top:4px;'>"
     "🏆 <strong>Key findings:</strong> chunk_size=750/75 is the overall winner — best faithfulness (0.9779) and "
     "answer relevancy (0.9748). Small chunks (200) hurt context precision badly (0.52). "
     "High overlap (150) hurts all metrics. LangGraph adds no measurable quality gain. "

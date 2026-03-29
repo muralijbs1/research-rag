@@ -11,86 +11,81 @@ st.set_page_config(page_title="Upload Paper", page_icon="📤", layout="wide")
 st.markdown("""
 <style>
 [data-testid="stSidebar"] {
-    background: linear-gradient(to right, #BEB6AA, #C8C0B4, #A89E92) !important;
-    border-right: 18px solid #1A1020 !important;
-    box-shadow: inset -20px 0 40px rgba(0,0,0,0.28) !important;
+    background: #C9D8E8 !important;
+    border-right: 1px solid #E2E8F0 !important;
 }
-[data-testid="stSidebar"] * { color: #2E2820 !important; font-size: 15px !important; }
+[data-testid="stSidebar"] * { color: #1E3A5F !important; font-size: 15px !important; }
 [data-testid="stAppViewContainer"] > .main {
-    background: linear-gradient(to right, #2A2040 0%, #17112E 45%, #09080F 100%) !important;
-    box-shadow: inset -24px 0 60px rgba(0,0,0,0.55) !important;
+    background: #F8FAFC !important;
 }
 [data-testid="stAppViewContainer"] > .main .block-container {
     padding-top: 2rem !important;
 }
-html, body, [data-testid="stAppViewContainer"] { color: rgba(200,195,225,0.85) !important; }
-h1, h2, h3 { color: rgba(220,215,240,0.92) !important; font-weight: 500 !important; }
+html, body, [data-testid="stAppViewContainer"] { color: #1E3A5F !important; }
+h1, h2, h3 { color: #1E3A5F !important; font-weight: 500 !important; }
 p, span, label { font-size: 15px !important; }
 .stButton > button[kind="primary"] {
-    background: rgba(124,58,237,0.85) !important;
+    background: #2563EB !important;
     border: none !important;
-    color: rgba(255,255,255,0.92) !important;
+    color: white !important;
     border-radius: 8px !important;
     font-weight: 400 !important;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.25) !important;
 }
 .stButton > button[kind="secondary"] {
     background: transparent !important;
-    border: 0.5px solid rgba(124,58,237,0.6) !important;
-    color: rgba(167,139,250,0.8) !important;
+    border: 1px solid #E2E8F0 !important;
+    color: #1E3A5F !important;
     border-radius: 8px !important;
 }
 input, textarea {
-    background: rgba(20,14,36,0.5) !important;
-    border: 0.5px solid rgba(255,255,255,0.08) !important;
-    color: rgba(200,195,225,0.85) !important;
+    background: #F8FAFC !important;
+    border: 1px solid #E2E8F0 !important;
+    color: #1E3A5F !important;
     border-radius: 8px !important;
-    box-shadow: inset 0 1px 4px rgba(0,0,0,0.3) !important;
 }
 
-/* Paper name input — green editable signal */
+/* Paper name input — navy editable signal */
 [data-testid="stTextInput"] input {
-    background: rgba(20,140,60,0.15) !important;
-    border: 1px solid rgba(40,180,80,0.6) !important;
-    color: rgba(200,195,225,0.9) !important;
+    background: #EFF6FF !important;
+    border: 1px solid #2563EB !important;
+    color: #1E3A5F !important;
     border-radius: 8px !important;
-    box-shadow: inset 0 1px 4px rgba(0,0,0,0.3) !important;
     transition: border 0.2s !important;
 }
 [data-testid="stTextInput"] input:focus {
-    border: 1px solid rgba(60,220,100,0.9) !important;
-    box-shadow: 0 0 0 2px rgba(40,180,80,0.2), inset 0 1px 4px rgba(0,0,0,0.3) !important;
+    border: 1px solid #1E3A5F !important;
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.15) !important;
 }
 [data-testid="stTextInput"] label {
-    color: rgba(80,200,120,0.9) !important;
+    color: #2563EB !important;
     font-size: 13px !important;
 }
 
 [data-testid="stWarning"] {
-    background: rgba(180,120,0,0.12) !important;
-    border-left: 3px solid rgba(180,140,0,0.6) !important;
+    background: #FFF7ED !important;
+    border-left: 3px solid #D97706 !important;
 }
 [data-testid="stError"] {
-    background: rgba(180,40,40,0.12) !important;
-    border-left: 3px solid rgba(200,60,60,0.6) !important;
+    background: #FEF2F2 !important;
+    border-left: 3px solid #DC2626 !important;
 }
 [data-testid="stSuccess"] {
-    background: rgba(30,140,80,0.12) !important;
-    border-left: 3px solid rgba(40,160,90,0.6) !important;
+    background: #F0FDF4 !important;
+    border-left: 3px solid #16A34A !important;
 }
 
-/* File uploader — cream */
+/* File uploader */
 [data-testid="stFileUploader"] {
-    background: linear-gradient(to right, #C8C0B4, #BEB6AA) !important;
-    border: 1px dashed rgba(124,58,237,0.5) !important;
+    background: #F1F5F9 !important;
+    border: 1px dashed #2563EB !important;
     border-radius: 12px !important;
 }
 [data-testid="stFileUploader"] > div {
-    background: linear-gradient(to right, #C8C0B4, #BEB6AA) !important;
+    background: #F1F5F9 !important;
     border-radius: 12px !important;
 }
 [data-testid="stFileUploaderDropzone"] {
-    background: linear-gradient(to right, #C8C0B4, #BEB6AA) !important;
+    background: #F1F5F9 !important;
     border: none !important;
     border-radius: 8px !important;
 }
@@ -100,15 +95,14 @@ input, textarea {
 [data-testid="stFileUploader"] span,
 [data-testid="stFileUploader"] p,
 [data-testid="stFileUploader"] small {
-    color: #2E2820 !important;
+    color: #1E3A5F !important;
 }
 [data-testid="stFileUploaderDropzone"] button,
 [data-testid="stFileUploader"] button {
-    background: rgba(124,58,237,0.85) !important;
+    background: #2563EB !important;
     color: white !important;
     border: none !important;
     border-radius: 8px !important;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important;
 }
 [data-testid="stFileUploaderDropzone"] button *,
 [data-testid="stFileUploader"] button * {
@@ -118,16 +112,16 @@ input, textarea {
 """, unsafe_allow_html=True)
 
 st.markdown(
-    "<div style='font-size:36px; font-weight:600; color:#F0C060; margin-bottom:6px;'>📤 Upload Research Paper</div>",
+    "<div style='font-size:36px; font-weight:600; color:#1E3A5F; background:#FEF3C7; display:inline-block; padding:5px 20px 5px 14px; border-radius:10px; margin-bottom:6px;'>📤 Upload Research Paper</div>",
     unsafe_allow_html=True
 )
 
 st.markdown("""
-<div style='background: rgba(160,90,0,0.18);
-            border-left: 3px solid rgba(220,140,0,0.8);
+<div style='background: #EFF6FF;
+            border-left: 3px solid #2563EB;
             border-radius: 6px;
             padding: 12px 16px;
-            color: rgba(255,200,80,0.95);
+            color: #1E3A5F;
             font-size: 15px;
             margin-bottom: 16px;'>
     ℹ️ Your paper will be saved to our database to answer your questions.

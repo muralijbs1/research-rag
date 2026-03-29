@@ -15,61 +15,71 @@ st.set_page_config(page_title="Ask a Question", page_icon="💬", layout="wide")
 st.markdown("""
 <style>
 [data-testid="stSidebar"] {
-    background: linear-gradient(to right, #BEB6AA, #C8C0B4, #A89E92) !important;
-    border-right: 18px solid #1A1020 !important;
-    box-shadow: inset -20px 0 40px rgba(0,0,0,0.28) !important;
+    background: #C9D8E8 !important;
+    border-right: 1px solid #E2E8F0 !important;
 }
-[data-testid="stSidebar"] * { color: #2E2820 !important; font-size: 15px !important; }
+[data-testid="stSidebar"] * { color: #1E3A5F !important; font-size: 15px !important; }
 
-/* New conversation button — gold */
+/* New conversation button */
 [data-testid="stSidebar"] .stButton > button {
-    background: #F0C060 !important;
-    color: #1A1208 !important;
+    background: #5B8DB8 !important;
+    color: white !important;
     border: none !important;
     border-radius: 8px !important;
     font-weight: 600 !important;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.15) !important;
+    white-space: nowrap !important;
+}
+[data-testid="stSidebar"] .stButton > button * {
+    color: white !important;
+}
+[data-testid="stSidebar"] .stButton > button p {
+    color: white !important;
+    font-size: 14px !important;
 }
 
-/* Model selector — visible on cream */
+/* Model selector */
 [data-testid="stSidebar"] [data-testid="stSelectbox"] > div,
 [data-testid="stSidebar"] [data-testid="stSelectbox"] > div > div {
-    background: #C8C0B4 !important;
-    border: 1px solid rgba(0,0,0,0.2) !important;
+    background: #5B8DB8 !important;
+    border: none !important;
     border-radius: 8px !important;
-    color: #1A1A2E !important;
+    color: white !important;
 }
 [data-testid="stSidebar"] [data-testid="stSelectbox"] span,
-[data-testid="stSidebar"] [data-testid="stSelectbox"] p {
-    color: #1A1A2E !important;
+[data-testid="stSidebar"] [data-testid="stSelectbox"] p,
+[data-testid="stSidebar"] [data-testid="stSelectbox"] * {
+    color: white !important;
     font-weight: 500 !important;
 }
 
 [data-testid="stAppViewContainer"] > .main {
-    background: linear-gradient(to right, #2A2040 0%, #17112E 45%, #09080F 100%) !important;
-    box-shadow: inset -24px 0 60px rgba(0,0,0,0.55) !important;
+    background: #F8FAFC !important;
 }
 [data-testid="stAppViewContainer"] > .main .block-container {
     padding-top: 2rem !important;
 }
-html, body, [data-testid="stAppViewContainer"] { color: rgba(200,195,225,0.85) !important; }
-h1, h2, h3 { color: rgba(220,215,240,0.92) !important; font-weight: 500 !important; }
+html, body, [data-testid="stAppViewContainer"] { color: #1E3A5F !important; }
+h1, h2, h3 { color: #1E3A5F !important; font-weight: 500 !important; }
 p, span, label { font-size: 15px !important; }
 
 /* User chat bubble */
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
-    background: rgba(124,58,237,0.2) !important;
-    border: 0.5px solid rgba(124,58,237,0.35) !important;
+    background: #BAE6FD !important;
+    border: none !important;
     border-radius: 16px 16px 4px 16px !important;
     padding: 12px 16px !important;
     margin-left: 15% !important;
     margin-bottom: 12px !important;
+    color: #1E3A5F !important;
+}
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) * {
+    color: #1E3A5F !important;
 }
 
 /* Assistant chat bubble */
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) {
-    background: rgba(42,32,64,0.5) !important;
-    border: 0.5px solid rgba(255,255,255,0.06) !important;
+    background: #F1F5F9 !important;
+    border: 1px solid #E2E8F0 !important;
     border-radius: 4px 16px 16px 16px !important;
     padding: 12px 16px !important;
     margin-right: 15% !important;
@@ -78,18 +88,18 @@ p, span, label { font-size: 15px !important; }
 
 /* Chat input */
 [data-testid="stChatInput"] {
-    background: rgba(42,32,64,0.6) !important;
-    border: 0.5px solid rgba(124,58,237,0.4) !important;
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
     border-radius: 12px !important;
 }
 [data-testid="stChatInput"] textarea {
     background: transparent !important;
-    color: rgba(200,195,225,0.9) !important;
+    color: #1E3A5F !important;
     border: none !important;
     box-shadow: none !important;
 }
 [data-testid="stChatInput"] button {
-    background: rgba(124,58,237,0.85) !important;
+    background: #1E3A5F !important;
     border-radius: 8px !important;
     color: white !important;
     border: none !important;
@@ -98,19 +108,19 @@ p, span, label { font-size: 15px !important; }
 /* Citation chips */
 .citation-chip {
     display: inline-block;
-    background: rgba(30,21,48,0.8);
-    color: rgba(167,139,250,0.85);
+    background: #EFF6FF;
+    color: #1E3A5F;
     font-size: 11px;
     padding: 3px 10px;
     border-radius: 20px;
-    border: 0.5px solid rgba(124,58,237,0.4);
+    border: 1px solid #BFDBFE;
     margin-right: 6px;
     margin-top: 6px;
 }
 
 [data-testid="stError"] {
-    background: rgba(180,40,40,0.12) !important;
-    border-left: 3px solid rgba(200,60,60,0.6) !important;
+    background: #FEF2F2 !important;
+    border-left: 3px solid #DC2626 !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -118,7 +128,7 @@ p, span, label { font-size: 15px !important; }
 # --- Sidebar ---
 with st.sidebar:
     st.markdown(
-        "<div style='font-size:16px; font-weight:600; color:#2E2820; margin-bottom:12px;'>⚙️ Settings</div>",
+        "<div style='font-size:16px; font-weight:600; color:#1E3A5F; margin-bottom:12px;'>⚙️ Settings</div>",
         unsafe_allow_html=True
     )
     model_choice = st.selectbox(
@@ -140,12 +150,12 @@ title_placeholder = st.empty()
 
 if st.session_state.conversation_title:
     title_placeholder.markdown(
-        f"<div style='font-size:26px; font-weight:600; color:#F0C060; margin-bottom:4px;'>💬 {st.session_state.conversation_title}</div>",
+        f"<div style='font-size:26px; font-weight:600; color:#1E3A5F; background:#DDD6FE; display:inline-block; padding:4px 18px 4px 12px; border-radius:8px; margin-bottom:4px;'>💬 {st.session_state.conversation_title}</div>",
         unsafe_allow_html=True
     )
 else:
     title_placeholder.markdown(
-        "<div style='font-size:26px; font-weight:600; color:#F0C060; margin-bottom:4px;'>💬 Ask a Question</div>",
+        "<div style='font-size:26px; font-weight:600; color:#1E3A5F; background:#DDD6FE; display:inline-block; padding:4px 18px 4px 12px; border-radius:8px; margin-bottom:4px;'>💬 Ask a Question</div>",
         unsafe_allow_html=True
     )
 
@@ -173,7 +183,7 @@ if question:
     if not st.session_state.conversation_title:
         st.session_state.conversation_title = generate_conversation_title(question)
         title_placeholder.markdown(
-            f"<div style='font-size:26px; font-weight:600; color:#F0C060; margin-bottom:4px;'>💬 {st.session_state.conversation_title}</div>",
+            f"<div style='font-size:26px; font-weight:600; color:#1E3A5F; background:#DDD6FE; display:inline-block; padding:4px 18px 4px 12px; border-radius:8px; margin-bottom:4px;'>💬 {st.session_state.conversation_title}</div>",
             unsafe_allow_html=True
         )
 

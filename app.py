@@ -9,121 +9,127 @@ st.set_page_config(page_title="Research RAG Assistant", page_icon="📄", layout
 st.markdown("""
 <style>
 [data-testid="stSidebar"] {
-    background: linear-gradient(to right, #BEB6AA, #C8C0B4, #A89E92) !important;
-    border-right: 18px solid #1A1020 !important;
-    box-shadow: inset -20px 0 40px rgba(0,0,0,0.28) !important;
+    background: #C9D8E8 !important;
+    border-right: 1px solid #E2E8F0 !important;
 }
-[data-testid="stSidebar"] * { color: #2E2820 !important; font-size: 15px !important; }
+[data-testid="stSidebar"] * { color: #1E3A5F !important; font-size: 15px !important; }
 [data-testid="stSidebar"] .stButton > button {
-    background: #7C3AED !important;
-    color: rgba(255,255,255,0.92) !important;
+    background: #1E3A5F !important;
+    color: white !important;
     border: none !important;
     border-radius: 8px !important;
     font-weight: 400 !important;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important;
 }
 [data-testid="stAppViewContainer"] > .main {
-    background: linear-gradient(to right, #2A2040 0%, #17112E 45%, #09080F 100%) !important;
-    box-shadow: inset -24px 0 60px rgba(0,0,0,0.55) !important;
+    background: #F8FAFC !important;
 }
 [data-testid="stAppViewContainer"] > .main .block-container {
     padding-top: 2rem !important;
 }
-html, body, [data-testid="stAppViewContainer"] { color: rgba(200,195,225,0.85) !important; }
-h1, h2, h3 { color: rgba(220,215,240,0.92) !important; font-weight: 500 !important; }
+html, body, [data-testid="stAppViewContainer"] { color: #1E3A5F !important; }
+h1, h2, h3 { color: #1E3A5F !important; font-weight: 500 !important; }
 p, span, label { font-size: 15px !important; }
 .stButton > button[kind="primary"] {
-    background: rgba(124,58,237,0.85) !important;
+    background: #2563EB !important;
     border: none !important;
-    color: rgba(255,255,255,0.92) !important;
+    color: white !important;
     border-radius: 8px !important;
     font-weight: 400 !important;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.25) !important;
 }
 .stButton > button[kind="secondary"] {
     background: transparent !important;
-    border: 0.5px solid rgba(124,58,237,0.6) !important;
-    color: rgba(167,139,250,0.8) !important;
+    border: 1px solid #E2E8F0 !important;
+    color: #1E3A5F !important;
     border-radius: 8px !important;
 }
 input, textarea {
-    background: rgba(20,14,36,0.5) !important;
-    border: 0.5px solid rgba(255,255,255,0.08) !important;
-    color: rgba(200,195,225,0.85) !important;
+    background: #F8FAFC !important;
+    border: 1px solid #E2E8F0 !important;
+    color: #1E3A5F !important;
     border-radius: 8px !important;
-    box-shadow: inset 0 1px 4px rgba(0,0,0,0.3) !important;
 }
 [data-testid="stInfo"] {
-    background: rgba(124,58,237,0.12) !important;
-    border-left: 3px solid rgba(124,58,237,0.6) !important;
-    color: rgba(200,195,225,0.8) !important;
+    background: #EFF6FF !important;
+    border-left: 3px solid #2563EB !important;
+    color: #1E3A5F !important;
 }
 [data-testid="stWarning"] {
-    background: rgba(180,120,0,0.12) !important;
-    border-left: 3px solid rgba(180,140,0,0.6) !important;
+    background: #FFF7ED !important;
+    border-left: 3px solid #D97706 !important;
 }
 [data-testid="stError"] {
-    background: rgba(180,40,40,0.12) !important;
-    border-left: 3px solid rgba(200,60,60,0.6) !important;
+    background: #FEF2F2 !important;
+    border-left: 3px solid #DC2626 !important;
 }
 [data-testid="stSuccess"] {
-    background: rgba(30,140,80,0.12) !important;
-    border-left: 3px solid rgba(40,160,90,0.6) !important;
+    background: #F0FDF4 !important;
+    border-left: 3px solid #16A34A !important;
 }
-hr { border-color: rgba(255,255,255,0.06) !important; }
+hr { border-color: #E2E8F0 !important; }
 [data-testid="stFileUploader"] {
-    background: rgba(42,32,64,0.4) !important;
-    border: 1px dashed rgba(124,58,237,0.4) !important;
+    background: #F1F5F9 !important;
+    border: 1px dashed #2563EB !important;
     border-radius: 8px !important;
 }
 [data-testid="stSelectbox"] > div {
-    background: rgba(20,14,36,0.5) !important;
-    border: 0.5px solid rgba(255,255,255,0.08) !important;
+    background: #F8FAFC !important;
+    border: 1px solid #E2E8F0 !important;
     border-radius: 8px !important;
-    color: rgba(200,195,225,0.85) !important;
+    color: #1E3A5F !important;
 }
+/* Page link arrow buttons — per-column colors */
 [data-testid="stPageLink"] a {
-    font-size: 15px !important;
-    color: rgba(167,139,250,0.85) !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    display: inline-block !important;
+    text-align: center !important;
+    padding: 4px 14px !important;
+    border-radius: 8px !important;
+    text-decoration: none !important;
+    line-height: 1.6 !important;
 }
+.stColumns > div:nth-child(1) [data-testid="stPageLink"] a { background: #DDD6FE !important; color: #4C1D95 !important; }
+.stColumns > div:nth-child(2) [data-testid="stPageLink"] a { background: #FECDD3 !important; color: #881337 !important; }
+.stColumns > div:nth-child(3) [data-testid="stPageLink"] a { background: #D1FAE5 !important; color: #065F46 !important; }
+.stColumns > div:nth-child(4) [data-testid="stPageLink"] a { background: #FEF3C7 !important; color: #78350F !important; }
+.stColumns > div:nth-child(5) [data-testid="stPageLink"] a { background: #CFFAFE !important; color: #164E63 !important; }
 </style>
 """, unsafe_allow_html=True)
 
 st.markdown(
-    "<div style='font-size:52px; font-weight:600; color:#F0C060; margin-bottom:6px; line-height:1.2;'>📄 Research RAG Assistant</div>",
+    "<div style='font-size:52px; font-weight:600; color:#1E3A5F; background:#D1FAE5; display:inline-block; padding:6px 20px 6px 14px; border-radius:10px; margin-bottom:6px; line-height:1.2;'>📄 Research RAG Assistant</div>",
     unsafe_allow_html=True
 )
 st.markdown(
-    "<div style='font-size:18px; color:#E8844A; margin-bottom:24px;'>"
+    "<div style='font-size:18px; color:#64748B; margin-bottom:24px;'>"
     "Chat with AI/ML research papers — powered by RAG.</div>",
     unsafe_allow_html=True
 )
 
 pages = [
-    ("pages/02_Chat.py",       "💬", "Chat",     "Ask questions across your paper corpus with streaming answers and citations."),
-    ("pages/03_Compare.py",    "⚖️", "Compare",  "GPT-4o-mini vs Claude Haiku side by side."),
-    ("pages/04_Evaluation.py", "📊", "Evaluate", "11 MLflow experiments — faithfulness, relevancy, recall, precision."),
-    ("pages/01_Upload.py",     "📤", "Upload",   "Add your own PDFs to the vector store instantly."),
-    ("pages/05_Library.py",    "📚", "Library",  "Manage uploaded papers — view chunks and delete."),
+    ("pages/02_Chat.py",       "💬", "Chat",     "Ask questions across your paper corpus with streaming answers and citations.", "#DDD6FE"),
+    ("pages/03_Compare.py",    "⚖️", "Compare",  "GPT-4o-mini vs Claude Haiku side by side.",                                  "#FECDD3"),
+    ("pages/04_Evaluation.py", "📊", "Evaluate", "11 MLflow experiments — faithfulness, relevancy, recall, precision.",         "#D1FAE5"),
+    ("pages/01_Upload.py",     "📤", "Upload",   "Add your own PDFs to the vector store instantly.",                            "#FEF3C7"),
+    ("pages/05_Library.py",    "📚", "Library",  "Manage uploaded papers — view chunks and delete.",                            "#CFFAFE"),
 ]
 
 cols = st.columns(5)
-for col, (page, icon, label, desc) in zip(cols, pages):
+for col, (page, icon, label, desc, color) in zip(cols, pages):
     with col:
         st.markdown(f"""
-        <div style='background: linear-gradient(to right, #C8C0B4, #BEB6AA);
-                    border: 0.5px solid rgba(0,0,0,0.1);
+        <div style='background: {color};
+                    border: 1px solid #E2E8F0;
                     border-radius: 12px;
                     padding: 22px 16px;
                     height: 180px;
                     box-sizing: border-box;
-                    box-shadow: inset 0 1px 4px rgba(0,0,0,0.15), inset -4px 0 10px rgba(0,0,0,0.1);
                     margin-bottom: 4px;
                     display: flex;
                     flex-direction: column;'>
             <div style='font-size:26px; margin-bottom:10px;'>{icon}</div>
-            <div style='font-size:15px; font-weight:500; color:#2E2820;'>{label}</div>
-            <div style='font-size:12px; color:#5A5248; margin-top:6px; line-height:1.5; flex:1;'>{desc}</div>
+            <div style='font-size:15px; font-weight:500; color:#1E3A5F;'>{label}</div>
+            <div style='font-size:12px; color:#64748B; margin-top:6px; line-height:1.5; flex:1;'>{desc}</div>
         </div>
         """, unsafe_allow_html=True)
-        st.page_link(page, label=f"Go to {label}")
+        st.page_link(page, label=f"Go to {label} →")

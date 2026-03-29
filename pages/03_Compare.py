@@ -15,75 +15,72 @@ st.set_page_config(page_title="Compare Models", page_icon="⚖️", layout="wide
 st.markdown("""
 <style>
 [data-testid="stSidebar"] {
-    background: linear-gradient(to right, #BEB6AA, #C8C0B4, #A89E92) !important;
-    border-right: 18px solid #1A1020 !important;
-    box-shadow: inset -20px 0 40px rgba(0,0,0,0.28) !important;
+    background: #C9D8E8 !important;
+    border-right: 1px solid #E2E8F0 !important;
 }
-[data-testid="stSidebar"] * { color: #2E2820 !important; font-size: 15px !important; }
+[data-testid="stSidebar"] * { color: #1E3A5F !important; font-size: 15px !important; }
 [data-testid="stAppViewContainer"] > .main {
-    background: linear-gradient(to right, #2A2040 0%, #17112E 45%, #09080F 100%) !important;
-    box-shadow: inset -24px 0 60px rgba(0,0,0,0.55) !important;
+    background: #F8FAFC !important;
 }
 [data-testid="stAppViewContainer"] > .main .block-container {
     padding-top: 2rem !important;
 }
-html, body, [data-testid="stAppViewContainer"] { color: rgba(200,195,225,0.85) !important; }
-h1, h2, h3 { color: rgba(220,215,240,0.92) !important; font-weight: 500 !important; }
+html, body, [data-testid="stAppViewContainer"] { color: #1E3A5F !important; }
+h1, h2, h3 { color: #1E3A5F !important; font-weight: 500 !important; }
 p, span, label { font-size: 15px !important; }
 input, textarea {
-    background: rgba(20,14,36,0.5) !important;
-    border: 0.5px solid rgba(255,255,255,0.08) !important;
-    color: rgba(200,195,225,0.85) !important;
+    background: #F8FAFC !important;
+    border: 1px solid #E2E8F0 !important;
+    color: #1E3A5F !important;
     border-radius: 8px !important;
-    box-shadow: inset 0 1px 4px rgba(0,0,0,0.3) !important;
 }
 [data-testid="stChatInput"] {
-    background: rgba(42,32,64,0.6) !important;
-    border: 0.5px solid rgba(124,58,237,0.4) !important;
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
     border-radius: 12px !important;
 }
 [data-testid="stChatInput"] textarea {
     background: transparent !important;
-    color: rgba(200,195,225,0.9) !important;
+    color: #1E3A5F !important;
     border: none !important;
     box-shadow: none !important;
 }
 [data-testid="stChatInput"] button {
-    background: rgba(124,58,237,0.85) !important;
+    background: #1E3A5F !important;
     border-radius: 8px !important;
     color: white !important;
     border: none !important;
 }
 [data-testid="stWarning"] {
-    background: rgba(180,120,0,0.12) !important;
-    border-left: 3px solid rgba(180,140,0,0.6) !important;
+    background: #FFF7ED !important;
+    border-left: 3px solid #D97706 !important;
 }
 [data-testid="stError"] {
-    background: rgba(180,40,40,0.12) !important;
-    border-left: 3px solid rgba(200,60,60,0.6) !important;
+    background: #FEF2F2 !important;
+    border-left: 3px solid #DC2626 !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
 st.markdown(
-    "<div style='font-size:36px; font-weight:600; color:#F0C060; margin-bottom:4px;'>⚖️ Compare Models</div>",
+    "<div style='font-size:36px; font-weight:600; color:#1E3A5F; background:#FECDD3; display:inline-block; padding:5px 20px 5px 14px; border-radius:10px; margin-bottom:4px;'>⚖️ Compare Models</div>",
     unsafe_allow_html=True
 )
 st.markdown(
-    "<div style='font-size:15px; color:rgba(200,195,225,0.6); margin-bottom:20px;'>Same question, two models, side by side.</div>",
+    "<div style='font-size:15px; color:#64748B; margin-bottom:20px;'>Same question, two models, side by side.</div>",
     unsafe_allow_html=True
 )
 
 question = st.chat_input("Ask a question to compare both models...")
 
 if question:
-    # Question banner — teal
+    # Question banner
     st.markdown(f"""
-    <div style='background: rgba(5,100,80,0.2);
-                border-left: 3px solid rgba(20,180,140,0.7);
+    <div style='background: #EFF6FF;
+                border-left: 3px solid #2563EB;
                 border-radius: 6px;
                 padding: 12px 16px;
-                color: rgba(80,220,180,0.9);
+                color: #1E3A5F;
                 font-size:15px;
                 margin-bottom: 20px;'>
         🔍 <strong>Question:</strong> {question}
@@ -93,13 +90,13 @@ if question:
     # Intent check
     state = intent_check_node({"question": question})
     if state.get("error"):
-        # Intent rejection — coral/red, clearly different
+        # Intent rejection
         st.markdown(f"""
-        <div style='background: rgba(30,60,120,0.2);
-                    border-left: 3px solid rgba(80,140,220,0.7);
+        <div style='background: #FFF7ED;
+                    border-left: 3px solid #D97706;
                     border-radius: 6px;
                     padding: 12px 16px;
-                    color: rgba(140,190,255,0.9);
+                    color: #92400E;
                     font-size:15px;
                     margin-bottom: 20px;'>
             🤖 {state["error"]}
@@ -137,8 +134,8 @@ if question:
             <div style='width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.7);'></div>
             <span style='font-size:14px; font-weight:500; color:white;'>Claude Haiku</span>
         </div>
-        <div style='background: rgba(42,32,64,0.5);
-                    border: 0.5px solid rgba(255,255,255,0.07);
+        <div style='background: #FFFFFF;
+                    border: 1px solid #E2E8F0;
                     border-top: none;
                     border-radius: 0 0 10px 10px;
                     padding: 16px;'>
@@ -152,7 +149,7 @@ if question:
         claude_papers = [p for p in claude_papers if p]
         if claude_papers:
             chips = "".join(
-                f"<span style='display:inline-block; background:rgba(30,21,48,0.8); color:rgba(217,119,6,0.9); font-size:11px; padding:3px 10px; border-radius:20px; border:0.5px solid rgba(217,119,6,0.4); margin-right:6px; margin-top:6px;'>📄 {p}</span>"
+                f"<span style='display:inline-block; background:#FFF7ED; color:#D97706; font-size:11px; padding:3px 10px; border-radius:20px; border:1px solid #FDE68A; margin-right:6px; margin-top:6px;'>📄 {p}</span>"
                 for p in claude_papers
             )
             st.markdown(f"<div style='margin-top:8px;'>{chips}</div>", unsafe_allow_html=True)
@@ -168,8 +165,8 @@ if question:
             <div style='width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.7);'></div>
             <span style='font-size:14px; font-weight:500; color:white;'>GPT-4o-mini</span>
         </div>
-        <div style='background: rgba(42,32,64,0.5);
-                    border: 0.5px solid rgba(255,255,255,0.07);
+        <div style='background: #FFFFFF;
+                    border: 1px solid #E2E8F0;
                     border-top: none;
                     border-radius: 0 0 10px 10px;
                     padding: 16px;'>
@@ -183,7 +180,7 @@ if question:
         openai_papers = [p for p in openai_papers if p]
         if openai_papers:
             chips = "".join(
-                f"<span style='display:inline-block; background:rgba(30,21,48,0.8); color:rgba(5,150,105,0.9); font-size:11px; padding:3px 10px; border-radius:20px; border:0.5px solid rgba(5,150,105,0.4); margin-right:6px; margin-top:6px;'>📄 {p}</span>"
+                f"<span style='display:inline-block; background:#F0FDF4; color:#16A34A; font-size:11px; padding:3px 10px; border-radius:20px; border:1px solid #BBF7D0; margin-right:6px; margin-top:6px;'>📄 {p}</span>"
                 for p in openai_papers
             )
             st.markdown(f"<div style='margin-top:8px;'>{chips}</div>", unsafe_allow_html=True)
