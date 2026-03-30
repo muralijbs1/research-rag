@@ -76,6 +76,10 @@ input, textarea {
     background: #FEF2F2 !important;
     border-left: 3px solid #DC2626 !important;
 }
+button[data-testid="collapsedControl"] { display: none !important; }
+[data-testid="stSidebarCollapseButton"] { display: none !important; }
+[data-testid="stSidebarCollapsedControl"] { display: none !important; }
+section[data-testid="stSidebarCollapsedControl"] { display: none !important; }
 </style>
 """, unsafe_allow_html=True)
 

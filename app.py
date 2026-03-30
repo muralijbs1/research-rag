@@ -95,6 +95,10 @@ input, textarea {
     border-left: 3px solid #16A34A !important;
 }
 hr { border-color: #C8B89A !important; }
+button[data-testid="collapsedControl"] { display: none !important; }
+[data-testid="stSidebarCollapseButton"] { display: none !important; }
+[data-testid="stSidebarCollapsedControl"] { display: none !important; }
+section[data-testid="stSidebarCollapsedControl"] { display: none !important; }
 [data-testid="stFileUploader"] {
     background: #FFFDF5 !important;
     border: 1px dashed #C8B89A !important;

@@ -46,18 +46,10 @@ st.markdown("""
 /* Model selector */
 [data-testid="stSidebar"] [data-testid="stSelectbox"] > div,
 [data-testid="stSidebar"] [data-testid="stSelectbox"] > div > div {
-    background: #1E3A5F !important;
-    border: none !important;
+    background: #FFFDF5 !important;
+    border: 1px solid #C8B89A !important;
     border-radius: 3px !important;
-    color: white !important;
     font-family: 'Georgia', serif !important;
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.2), inset 0 -1px 3px rgba(255,255,255,0.1) !important;
-}
-[data-testid="stSidebar"] [data-testid="stSelectbox"] span,
-[data-testid="stSidebar"] [data-testid="stSelectbox"] p,
-[data-testid="stSidebar"] [data-testid="stSelectbox"] * {
-    color: white !important;
-    font-weight: 500 !important;
 }
 
 [data-testid="stAppViewContainer"] > .main {
@@ -86,35 +78,22 @@ h1, h2, h3 {
 }
 p, span, label { font-size: 15px !important; }
 
-/* Chat messages — base reset */
-[data-testid="stChatMessage"] {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
-    padding: 10px 0 !important;
-    font-family: 'Georgia', serif !important;
+/* Hide assistant avatar */
+[data-testid="stChatMessageAvatarAssistant"] {
+    display: none !important;
 }
 
-/* User messages — right side */
-[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
-    margin-left: 25% !important;
-    margin-right: 0 !important;
-    text-align: right !important;
-    border-bottom: 0.5px solid #C8B89A !important;
-}
-[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) * {
-    color: #1E3A5F !important;
-    font-family: 'Georgia', serif !important;
-}
-
-/* Assistant messages — left side */
+/* Assistant messages */
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) {
-    margin-right: 25% !important;
-    margin-left: 0 !important;
-    border-bottom: 0.5px solid #C8B89A !important;
+    border-left: 3px solid #C8B89A !important;
+    padding-left: 16px !important;
+    background: transparent !important;
+    border-bottom: 0.5px solid #E8E0D0 !important;
+    margin-right: 10% !important;
+    margin-bottom: 16px !important;
 }
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) * {
+    font-style: italic !important;
     color: #2C2416 !important;
     font-family: 'Georgia', serif !important;
 }
@@ -157,8 +136,18 @@ p, span, label { font-size: 15px !important; }
     background: #FEF2F2 !important;
     border-left: 3px solid #DC2626 !important;
 }
+button[data-testid="collapsedControl"] { display: none !important; }
+[data-testid="stSidebarCollapseButton"] { display: none !important; }
+[data-testid="stSidebarCollapsedControl"] { display: none !important; }
+section[data-testid="stSidebarCollapsedControl"] { display: none !important; }
 </style>
 """, unsafe_allow_html=True)
+
+_USER_BUBBLE = (
+    "background:#E8E4DC; border-radius:18px 18px 4px 18px; "
+    "padding:12px 16px; color:#1E3A5F; font-family:'Georgia',serif; "
+    "text-align:right; line-height:1.7;"
+)
 
 # --- Sidebar ---
 with st.sidebar:
@@ -185,12 +174,12 @@ title_placeholder = st.empty()
 
 if st.session_state.conversation_title:
     title_placeholder.markdown(
-        f"<div style='font-size:26px; font-weight:600; color:#1E3A5F; background:#DDD6FE; display:inline-block; padding:4px 18px 4px 12px; border-radius:8px; margin-bottom:4px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.12), inset 0 -1px 3px rgba(255,255,255,0.5);'>💬 {st.session_state.conversation_title}</div>",
+        f"<div style='font-size:26px; font-weight:700; color:#1E3A5F; font-family:Georgia,serif; background:transparent; border:none; padding:0; margin-bottom:16px;'>💬 {st.session_state.conversation_title}</div>",
         unsafe_allow_html=True
     )
 else:
     title_placeholder.markdown(
-        "<div style='font-size:26px; font-weight:600; color:#1E3A5F; background:#DDD6FE; display:inline-block; padding:4px 18px 4px 12px; border-radius:8px; margin-bottom:4px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.12), inset 0 -1px 3px rgba(255,255,255,0.5);'>💬 Ask a Question</div>",
+        "<div style='font-size:26px; font-weight:700; color:#1E3A5F; font-family:Georgia,serif; background:transparent; border:none; padding:0; margin-bottom:16px;'>💬 Ask a Question</div>",
         unsafe_allow_html=True
     )
 
@@ -200,19 +189,22 @@ if "messages" not in st.session_state:
 
 for msg in st.session_state.messages:
     if msg["role"] == "user":
-        st.markdown("<div style='text-align:right; font-size:11px; color:#9CA3AF; margin-bottom:2px; font-family:Georgia,serif;'>You</div>", unsafe_allow_html=True)
+        _, col = st.columns([1, 4])
+        with col:
+            st.markdown(
+                f"<div style='{_USER_BUBBLE}'>{msg['content']}</div>",
+                unsafe_allow_html=True
+            )
     else:
-        st.markdown("<div style='font-size:11px; color:#9CA3AF; margin-bottom:2px; font-family:Georgia,serif;'>Assistant</div>", unsafe_allow_html=True)
-    avatar = "👤" if msg["role"] == "user" else "🤖"
-    with st.chat_message(msg["role"], avatar=avatar):
-        st.markdown(msg["content"])
-        if msg.get("papers"):
-            with st.expander("📄 References"):
-                chips = "".join(
-                    f"<span style='display:inline-block; background:#F5F0E8; color:#1E3A5F; font-size:12px; padding:4px 12px; border-radius:3px; border:1px solid #C8B89A; margin-right:6px; margin-top:6px; font-family:Georgia,serif;'>📄 {p}</span>"
-                    for p in msg["papers"]
-                )
-                st.markdown(f"<div>{chips}</div>", unsafe_allow_html=True)
+        with st.chat_message("assistant", avatar="🤖"):
+            st.markdown(msg["content"])
+            if msg.get("papers"):
+                with st.expander("📄 References"):
+                    chips = "".join(
+                        f"<span style='display:inline-block; background:#F5F0E8; color:#1E3A5F; font-size:12px; padding:4px 12px; border-radius:3px; border:1px solid #C8B89A; margin-right:6px; margin-top:6px; font-family:Georgia,serif;'>📄 {p}</span>"
+                        for p in msg["papers"]
+                    )
+                    st.markdown(f"<div>{chips}</div>", unsafe_allow_html=True)
 
 # --- Input ---
 question = st.chat_input("Ask about your research papers...")
@@ -221,19 +213,21 @@ if question:
     if not st.session_state.conversation_title:
         st.session_state.conversation_title = generate_conversation_title(question)
         title_placeholder.markdown(
-            f"<div style='font-size:26px; font-weight:600; color:#1E3A5F; background:#DDD6FE; display:inline-block; padding:4px 18px 4px 12px; border-radius:8px; margin-bottom:4px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.12), inset 0 -1px 3px rgba(255,255,255,0.5);'>💬 {st.session_state.conversation_title}</div>",
+            f"<div style='font-size:26px; font-weight:700; color:#1E3A5F; font-family:Georgia,serif; background:transparent; border:none; padding:0; margin-bottom:16px;'>💬 {st.session_state.conversation_title}</div>",
             unsafe_allow_html=True
         )
 
     st.session_state.messages.append({"role": "user", "content": question})
-    st.markdown("<div style='text-align:right; font-size:11px; color:#9CA3AF; margin-bottom:2px; font-family:Georgia,serif;'>You</div>", unsafe_allow_html=True)
-    with st.chat_message("user", avatar="👤"):
-        st.markdown(question)
+    _, col = st.columns([1, 4])
+    with col:
+        st.markdown(
+            f"<div style='{_USER_BUBBLE}'>{question}</div>",
+            unsafe_allow_html=True
+        )
 
     routing = route_message(question, st.session_state.messages[:-1])
     print(f"[ROUTING] original='{question}' → route='{routing['route']}' → rewritten='{routing.get('rewritten_question')}'")
 
-    st.markdown("<div style='font-size:11px; color:#9CA3AF; margin-bottom:2px; font-family:Georgia,serif;'>Assistant</div>", unsafe_allow_html=True)
     with st.chat_message("assistant", avatar="🤖"):
         if routing["route"] == "chat":
             message = routing["message"] or "I'm not sure how to help with that. Try asking about AI/ML research!"

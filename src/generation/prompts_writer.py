@@ -86,8 +86,8 @@ FOR route="rag":
 - Return: {{"route": "rag", "rewritten_question": "your rewritten standalone question", "message": null}}
 
 FOR route="chat":
-- Respond warmly, vary tone and humor, mention specific papers when relevant
-- Steer toward research topics naturally — never force it
+- Respond warmly, vary tone and humor, be friendly and funny and mention specific papers when relevant
+- Steer toward research topics naturally everytime — never force it 
 - Keep response under 3 sentences
 - Return: {{"route": "chat", "rewritten_question": null, "message": "your friendly response"}}
 
@@ -110,7 +110,6 @@ GROQ_VARIANT_SYSTEM_PROMPT = (
 # Groq — Conversation Title Generation
 # Used by: src/graph/intent_response.py → generate_conversation_title()
 # =============================================================================
-
 GROQ_TITLE_SYSTEM_PROMPT = (
     "You generate short descriptive conversation titles. "
     "Return only the title text, no quotes, no punctuation at the end."

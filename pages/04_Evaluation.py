@@ -53,6 +53,10 @@ hr { border-color: #C8B89A !important; }
     color: #2C2416 !important;
     font-family: 'Georgia', serif !important;
 }
+button[data-testid="collapsedControl"] { display: none !important; }
+[data-testid="stSidebarCollapseButton"] { display: none !important; }
+[data-testid="stSidebarCollapsedControl"] { display: none !important; }
+section[data-testid="stSidebarCollapsedControl"] { display: none !important; }
 </style>
 """, unsafe_allow_html=True)
 
