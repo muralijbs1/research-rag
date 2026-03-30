@@ -211,7 +211,10 @@ question = st.chat_input("Ask about your research papers...")
 
 if question:
     if not st.session_state.conversation_title:
-        st.session_state.conversation_title = generate_conversation_title(question)
+        try:
+            st.session_state.conversation_title = generate_conversation_title(question)
+        except Exception:
+            st.session_state.conversation_title = question[:60]
         title_placeholder.markdown(
             f"<div style='font-size:26px; font-weight:700; color:#1E3A5F; font-family:Georgia,serif; background:transparent; border:none; padding:0; margin-bottom:16px;'>💬 {st.session_state.conversation_title}</div>",
             unsafe_allow_html=True
@@ -225,7 +228,11 @@ if question:
             unsafe_allow_html=True
         )
 
-    routing = route_message(question, st.session_state.messages[:-1])
+    try:
+        routing = route_message(question, st.session_state.messages[:-1])
+    except Exception as e:
+        st.error(f"Error: {e}")
+        st.stop()
     print(f"[ROUTING] original='{question}' → route='{routing['route']}' → rewritten='{routing.get('rewritten_question')}'")
 
     with st.chat_message("assistant", avatar="🤖"):

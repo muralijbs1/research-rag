@@ -268,16 +268,19 @@ for metric, color in zip(METRICS, LINE_COLORS):
     ))
 
 # Highlight best run (Run 03) — use numeric index
-best_idx = runs.index("03 chunk=750/75")
-fig2.add_vline(
-    x=best_idx,
-    line_width=1.5,
-    line_dash="dash",
-    line_color="rgba(30,58,95,0.4)",
-    annotation_text="Best",
-    annotation_font_color="#1E3A5F",
-    annotation_font_size=12,
-)
+try:
+    best_idx = runs.index("03 chunk=750/75")
+    fig2.add_vline(
+        x=best_idx,
+        line_width=1.5,
+        line_dash="dash",
+        line_color="rgba(30,58,95,0.4)",
+        annotation_text="Best",
+        annotation_font_color="#1E3A5F",
+        annotation_font_size=12,
+    )
+except ValueError:
+    pass
 
 line_layout = {**PLOT_LAYOUT}
 line_layout["xaxis"] = dict(

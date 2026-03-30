@@ -104,10 +104,17 @@ if not uploaded:
     """, unsafe_allow_html=True)
     st.stop()
 
-store = VectorStore()
+try:
+    store = VectorStore()
+except Exception as e:
+    st.error(f"Could not connect to vector store: {e}")
+    st.stop()
 
 for paper_name in uploaded:
-    chunk_count = store.chunk_count_by_name(paper_name)
+    try:
+        chunk_count = store.chunk_count_by_name(paper_name)
+    except Exception:
+        chunk_count = 0
 
     st.markdown(f"""
     <div style='background: #FFFDF5;
@@ -129,13 +136,16 @@ for paper_name in uploaded:
     col_gap, col_btn = st.columns([11, 1])
     with col_btn:
         if st.button("Delete", key=f"del_{paper_name}", type="secondary"):
-            info = next(
-                (p for p in store.list_papers_with_info() if p["paper_name"] == paper_name),
-                None,
-            )
-            if info and info.get("source") == "system":
-                st.error("System papers cannot be deleted.", icon="🔒")
-            else:
-                store.delete(paper_name)
-                st.session_state.uploaded_papers.remove(paper_name)
-                st.rerun()
+            try:
+                info = next(
+                    (p for p in store.list_papers_with_info() if p["paper_name"] == paper_name),
+                    None,
+                )
+                if info and info.get("source") == "system":
+                    st.error("System papers cannot be deleted.", icon="🔒")
+                else:
+                    store.delete(paper_name)
+                    st.session_state.uploaded_papers.remove(paper_name)
+                    st.rerun()
+            except Exception as e:
+                st.error(f"Delete failed: {e}")

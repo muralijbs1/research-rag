@@ -116,7 +116,11 @@ if question:
     """, unsafe_allow_html=True)
 
     # Intent check
-    state = intent_check_node({"question": question})
+    try:
+        state = intent_check_node({"question": question})
+    except Exception as e:
+        st.error(f"Error: {e}")
+        st.stop()
     if state.get("error"):
         # Intent rejection
         st.markdown(f"""
@@ -132,9 +136,13 @@ if question:
         """, unsafe_allow_html=True)
         st.stop()
 
-    with st.spinner("Retrieving and reranking chunks..."):
-        chunks = retrieve(question, top_k=20)
-        reranked = rerank(question, chunks, top_n=5)
+    try:
+        with st.spinner("Retrieving and reranking chunks..."):
+            chunks = retrieve(question, top_k=20)
+            reranked = rerank(question, chunks, top_n=5)
+    except Exception as e:
+        st.error(f"Error: {e}")
+        st.stop()
 
     def run_claude(q, c):
         return generate_answer(q, c, model="anthropic")
@@ -142,12 +150,16 @@ if question:
     def run_openai(q, c):
         return generate_answer(q, c, model="openai")
 
-    with st.spinner("Generating answers from both models simultaneously..."):
-        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
-            future_claude = executor.submit(run_claude, question, reranked)
-            future_openai = executor.submit(run_openai, question, reranked)
-            result_claude = future_claude.result()
-            result_openai = future_openai.result()
+    try:
+        with st.spinner("Generating answers from both models simultaneously..."):
+            with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+                future_claude = executor.submit(run_claude, question, reranked)
+                future_openai = executor.submit(run_openai, question, reranked)
+                result_claude = future_claude.result()
+                result_openai = future_openai.result()
+    except Exception as e:
+        st.error(f"Error: {e}")
+        st.stop()
 
     col_left, col_right = st.columns(2)
 
